@@ -12,7 +12,6 @@ pub fn checkout() -> Html {
                     <div>
                         <h2 class="checkout__title">{"Your shopping basket"}</h2>
                         // Basket Items 
-
                     </div>
                 </div>
                 <div class="checkout__right">

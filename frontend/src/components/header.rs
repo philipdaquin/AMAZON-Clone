@@ -1,10 +1,14 @@
 use yew_router::prelude::*;
 use yew::{prelude::*, function_component, html, Html};
 use crate::route::AppRoute;
-
+use crate::state_provider::{StateContext, Action};
 
 #[function_component(Header)]
 pub fn setup_header() -> Html {
+    let subtotal = use_context::<StateContext>().expect("Could Not Get Subtotal Value");
+
+    
+
     html! {
         <>
             <header class="header">
@@ -15,10 +19,7 @@ pub fn setup_header() -> Html {
                         <input type="text" placeholder="I'm looking for.." class="header__search__input" />
                         <i class="bx bx-search-alt-2 header__search__icon" ></i>
                     </div>
-                    
-                    
                     <div class="header__nav">
-
                         //  Sign In Page
                         <div class="header__option">
                             <span class="header__option1">{"Hello Guest"}</span>                            

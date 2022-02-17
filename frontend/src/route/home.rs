@@ -1,7 +1,6 @@
 use yew::{prelude::*, function_component, html, Html};
 use crate::components::{
-    product::Product
-};
+    product::Product};
 #[function_component(Home)]
 pub fn homepage() -> Html {
     html! {
