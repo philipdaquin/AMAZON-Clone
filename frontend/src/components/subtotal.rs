@@ -13,7 +13,7 @@ pub fn subtotal(props: &Props) -> Html {
                 <div class="subtotal">
                     <>
                         <p>{
-                            format!("Subtotal ({} items): ", quantity)}<strong>{format!("{}",price)}</strong>
+                            format!("Subtotal ({} items): ", quantity)}<strong>{format!("${}",price)}</strong>
                         </p>
                     </>
                     <small class="subtotal__gift">

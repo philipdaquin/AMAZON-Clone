@@ -1,8 +1,8 @@
-use std::fmt::{Display, Formatter, Result};
+use std::{fmt::{Display, Formatter, Result}};
 use yew::prelude::*;
 
 
-#[derive(Debug, PartialEq, Clone, Default)]
+#[derive(PartialEq, Properties, Clone)]
 pub struct ProductType { 
     pub id: i32,
     pub title: String,
@@ -11,7 +11,7 @@ pub struct ProductType {
     pub price: f32
 }
 
-#[derive(Debug, PartialEq, Clone, Default)]
+#[derive(PartialEq, Properties, Clone)]
 pub struct CartProduct { 
     pub product: ProductType,
     pub quantity: i32
@@ -19,7 +19,13 @@ pub struct CartProduct {
 
 impl Display for ProductType {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        write!(f, "{:?}", self)
+        match self { 
+            id => write!(f, "{:?}", self.id),
+            title => write!(f, "{:?}", self.title),
+            image => write!(f, "{:?}", self.image),
+            rating => write!(f, "{:?}", self.rating),
+            price => write!(f, "{:?}", self.price),
+        }
     }
 }
 

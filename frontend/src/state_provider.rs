@@ -5,15 +5,11 @@ use super::types::{CartProduct, ProductType};
 use gloo_console::{self as console, log};
 use std::fmt::{Display, Formatter, Result};
 
-#[derive(Debug, PartialEq, Clone, Default)]
+#[derive(PartialEq, Clone, Default)]
 pub struct State {
     pub basket: Vec<ProductType>
 }
-impl Display for State {
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        write!(f, "{:?}", self.basket)
-    }
-}
+
 pub enum Action { 
     AddToCart(ProductType)
 }
@@ -22,21 +18,21 @@ impl Reducible for State {
 
     fn reduce(self: Rc<Self>, action: Self::Action) -> Rc<Self> {
         match action { 
-            Action::AddToCart(product) => { 
-                self.basket.clone().push(product.clone());
-                console::log!("{}", self.basket.len())
+            Action::AddToCart(product) =>  { 
+               let mut basket: Vec<ProductType> = self.basket.clone();
+               basket.push(product);
             }
         }
 
         State { 
-            basket: self.basket.clone(),
+            basket: Vec::new(),
         }.into()
     }
 }
 
 pub type StateContext = UseReducerHandle<State>;
 
-#[derive(Properties, Debug, PartialEq)]
+#[derive(Properties, PartialEq)]
 pub struct StateProviderProps {
     #[prop_or_default]
     pub children: Children,

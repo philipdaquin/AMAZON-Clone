@@ -1,10 +1,10 @@
 pub mod home;
-pub mod checkout;
+pub mod checkout_page;
 pub mod order;
 pub mod prime;
 pub mod signin;
 
-use crate::route::{ home::Home, checkout::Checkout, 
+use crate::route::{ home::Home, checkout_page::Checkout, 
     signin::Signin, order::Order,  prime::Prime,
 };
 use yew_router::prelude::*;
