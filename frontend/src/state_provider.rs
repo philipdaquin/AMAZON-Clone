@@ -19,11 +19,12 @@ impl Reducible for State {
     type Action = Action;
 
     fn reduce(self: Rc<Self>, action: Self::Action) -> Rc<Self> {
-        match action { 
+        let basket: Vec<ProductProps> = match action { 
             Action::AddToCart(product) =>  { 
                 let mut basket: Vec<ProductProps> = self.basket.clone();
-                basket.push(product)
-            }
+                basket.push(product);
+                basket
+            },
             Action::RemoveToCart(product_id) => { 
                 let mut basket = self.basket.clone();
                 let product = basket
@@ -34,13 +35,14 @@ impl Reducible for State {
                 if let Some(product_id) = product { 
                     basket.remove(product_id);
                 } else { 
-                    console::log!("Product Not Found for {}", product_id)
+                    console::log!("Product Not Found for {}", product_id);
                 }
-            }
-        }
+                basket
+            },
+        };
 
         State { 
-            basket: Vec::new(),
+            basket: basket,
         }.into()
     }
 }

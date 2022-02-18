@@ -24,7 +24,7 @@ impl Component for App {
 
     fn create(ctx: &Context<Self>) -> Self {
         Self { 
-            signed_in: false
+            signed_in: true
         }
     }
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
