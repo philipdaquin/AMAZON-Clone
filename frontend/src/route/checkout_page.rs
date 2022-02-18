@@ -9,25 +9,6 @@ use crate::components::product::{Product, ProductProps};
 pub fn checkout() -> Html {
 
     let cart_context = use_cart_context();
-    // let item_list = cart_context
-    //     .basket.iter()
-    //     .map(|&item| { 
-    //     let Props { id, title, image, rating, price } = item.into();
-        
-    //     return html! { 
-    //         <>
-    //             <CheckOutProduct
-    //                 id={id}
-    //                 title={title}
-    //                 image={image}
-    //                 rating={rating}
-    //                 price={price}
-    //             />
-    //         </>
-    //     }
-    // }); 
-    // let ProductType { id, title, image, rating, price } = item.clone();
-
     let item_list: Vec<Html> = cart_context
         .basket
         .iter()
@@ -42,7 +23,6 @@ pub fn checkout() -> Html {
             />
         </>
     }).collect();
-  
     html! {
         <>
             <div class="checkout">
@@ -53,7 +33,6 @@ pub fn checkout() -> Html {
                     <div>
                         <h2 class="checkout__title">{"Your shopping basket"}</h2>
                         {item_list}
-                        
                     </div>
                 </div>
                 <div class="checkout__right">

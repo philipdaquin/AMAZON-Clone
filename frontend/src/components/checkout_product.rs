@@ -11,9 +11,6 @@ pub fn checkout_list(ProductProps { id, title, image, rating, price }: &ProductP
         Callback::from(move |_| cart_context.dispatch(Action::RemoveToCart(id)))
     };
 
-
-
-
     html! {
         <>
             <div class="checkout_product">
@@ -21,7 +18,7 @@ pub fn checkout_list(ProductProps { id, title, image, rating, price }: &ProductP
             
                 <div class="checkoutproduct__info">
                     <p class="checkooutproduct__title">{title.clone()}</p>
-                    <p class="checkoutproduct__price">{price.clone()}
+                    <p class="checkoutproduct__price">
                         <small>{"$"}</small>
                         <strong>{price.clone()}</strong>
                     </p>

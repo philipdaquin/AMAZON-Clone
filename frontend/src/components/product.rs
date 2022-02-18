@@ -43,7 +43,7 @@ pub fn productcontainer(ProductProps {
                 <div class="product__info">
                     <p>{title}</p>
                     <p class="product__price">
-                        <small>{"$"}</small>
+                        <small>{"$ "}</small>
                         <strong>{price}</strong>
                     </p>
                     <div class="product__rating">
