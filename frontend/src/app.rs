@@ -1,14 +1,16 @@
 use yew::prelude::*;
 use yew_router::prelude::*;
 use crate::components::{
-    header::Header, footer::Footer
+    header::Header, footer::Footer, login::Login
 };
 use crate::route::home::Home;
 use crate::route::{switch, AppRoute};
 use super::state_provider::StateProvider;
 
 
-pub struct App;
+pub struct App { 
+    pub signed_in: bool
+}
 
 pub enum Msg {
 }
@@ -21,7 +23,9 @@ impl Component for App {
     type Properties = Prop;
 
     fn create(ctx: &Context<Self>) -> Self {
-        Self
+        Self { 
+            signed_in: false
+        }
     }
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         true
@@ -30,15 +34,25 @@ impl Component for App {
         false
     }
     fn view(&self, ctx: &Context<Self>) -> Html {
-        html! {
-           <StateProvider>
+        if !self.signed_in { 
+            html! {
                 <BrowserRouter>
-                    <Header/>
-                        <Switch<AppRoute> render={Switch::render(switch)} />
+                    <Login/>
+                        // <Switch<AppRoute> render={Switch::render(switch)} />
                     <Footer/>
                 </BrowserRouter>
-           </StateProvider>
-
+             }
+        }  else {
+            
+            html! {
+                <StateProvider>
+                    <BrowserRouter>
+                        <Header/>
+                             <Switch<AppRoute> render={Switch::render(switch)} />
+                        <Footer/>
+                    </BrowserRouter>
+                </StateProvider>
+            }
         }
     }
 }

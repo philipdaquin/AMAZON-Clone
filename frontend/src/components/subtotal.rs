@@ -1,8 +1,8 @@
 use yew::{prelude::*, function_component, html, Html};
-use crate::components::product::Props;
+use crate::components::product::ProductProps;
 use crate::state_provider::use_cart_context;
 #[function_component(Subtotal)]
-pub fn subtotal(props: &Props) -> Html {
+pub fn subtotal(props: &ProductProps) -> Html {
     let subtotal = use_cart_context();
     let quantity = subtotal.basket.len();
     let price = subtotal.basket.iter()

@@ -1,48 +1,42 @@
 use yew::{prelude::*, function_component, html, Html};
 use crate::state_provider::{StateContext, Action, use_cart_context};
-use crate::types::ProductType;
-#[derive(Properties, PartialEq, Clone, Debug)] 
-pub struct Props {
+// use crate::types::ProductType;
+#[derive(Properties, PartialEq, Clone)] 
+pub struct ProductProps {
     #[prop_or_default]
     pub id: i32,
-    
     #[prop_or_default]
     pub title: String,
-    
     #[prop_or_default]
     pub image: String,
-    
     #[prop_or_default]
     pub rating: usize,
-
     #[prop_or_default]
     pub price: f32
 }
 
 #[function_component(Product)]
-pub fn productcontainer(props: &Props) -> Html {
-    let Props {
+pub fn productcontainer(ProductProps { 
         id,
         title, 
         image, 
         rating, 
-        price
-    } = props.clone();
+        price 
+    }: &ProductProps) -> Html {
+   
 
-    let product_type = ProductType { 
-        id: props.id.clone(),
-        title: props.title.clone(), 
-        image: props.image.clone(), 
-        rating: props.rating.clone(), 
-        price: props.price
+    let product_type = ProductProps { 
+        id: id.clone(),
+        title: title.clone(), 
+        image: image.clone(), 
+        rating: rating.clone(), 
+        price: price.clone()
     };
-
     let cart_product = use_cart_context();
     let add_to_cart = { 
         let cart_product = cart_product.clone();
         Callback::from(move |e: MouseEvent| cart_product.dispatch(Action::AddToCart(product_type.clone())))
     };
-
     html! {
         <>
             <div class="product">
@@ -53,10 +47,10 @@ pub fn productcontainer(props: &Props) -> Html {
                         <strong>{price}</strong>
                     </p>
                     <div class="product__rating">
-                        <p>{format!("{}", "⭐".repeat(rating))}</p>
+                        <p>{format!("{}", "⭐".repeat(*rating))}</p>
                     </div>
                 </div>
-                <img src={image} alt=""/>
+                <img src={image.clone()} alt=""/>
                 <button class="button" onclick={add_to_cart}>{"Add to Basket"}</button>    
             </div>
         </>
