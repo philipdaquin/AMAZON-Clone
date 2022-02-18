@@ -1,8 +1,10 @@
 use yew::{prelude::*, function_component, html, Html};
 use crate::components::{
     product::Product};
+use crate::state_provider::StateContext;
 #[function_component(Home)]
 pub fn homepage() -> Html {
+    let msg = use_context::<StateContext>().unwrap();
     html! {
         <>
             <div class="home">

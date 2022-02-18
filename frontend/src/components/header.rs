@@ -1,13 +1,12 @@
 use yew_router::prelude::*;
 use yew::{prelude::*, function_component, html, Html};
 use crate::route::AppRoute;
-use crate::state_provider::{StateContext, Action};
+use crate::state_provider::{StateContext, Action, use_cart_context};
 
 #[function_component(Header)]
 pub fn setup_header() -> Html {
-    let subtotal = use_context::<StateContext>().expect("Could Not Get Subtotal Value");
 
-    
+    let subtotal = use_cart_context();
 
     html! {
         <>
@@ -45,7 +44,7 @@ pub fn setup_header() -> Html {
                         <div class="header__option__basket">
                             <Link<AppRoute> to={AppRoute::Checkout}>
                                 <i class= "bx bxs-shopping-bag" ></i>
-                                <span class="header__option2 header__basket__count">{"0"}</span>
+                                <span class="header__option2 header__basket__count">{subtotal.basket.len()}</span>
                             </Link<AppRoute>>
                         </div>
                     </div>

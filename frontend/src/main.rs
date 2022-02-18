@@ -2,6 +2,7 @@ pub mod app;
 pub mod components;
 pub mod route;
 pub mod state_provider;
+pub mod types;
 
 use wasm_bindgen::prelude::*;
 use crate::app::App;

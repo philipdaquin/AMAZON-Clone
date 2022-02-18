@@ -31,13 +31,13 @@ impl Component for App {
     }
     fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
-            <StateProvider>
+           <StateProvider>
                 <BrowserRouter>
                     <Header/>
                         <Switch<AppRoute> render={Switch::render(switch)} />
                     <Footer/>
                 </BrowserRouter>
-            </StateProvider>
+           </StateProvider>
 
         }
     }

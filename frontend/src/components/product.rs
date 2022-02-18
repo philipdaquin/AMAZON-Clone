@@ -1,5 +1,6 @@
 use yew::{prelude::*, function_component, html, Html};
-use crate::state_provider::{StateContext, Action};
+use crate::state_provider::{StateContext, Action, use_cart_context};
+use crate::types::ProductType;
 #[derive(Properties, PartialEq, Clone, Debug)] 
 pub struct Props {
     #[prop_or_default]
@@ -28,10 +29,18 @@ pub fn productcontainer(props: &Props) -> Html {
         price
     } = props.clone();
 
-    let cart_product = use_context::<StateContext>().expect("State Context - Add to Cart Error");
+    let product_type = ProductType { 
+        id: props.id.clone(),
+        title: props.title.clone(), 
+        image: props.image.clone(), 
+        rating: props.rating.clone(), 
+        price: props.price
+    };
+
+    let cart_product = use_cart_context();
     let add_to_cart = { 
         let cart_product = cart_product.clone();
-        Callback::from(move |e: MouseEvent| cart_product.dispatch(Action::AddToCart(id)))
+        Callback::from(move |e: MouseEvent| cart_product.dispatch(Action::AddToCart(product_type.clone())))
     };
 
     html! {
