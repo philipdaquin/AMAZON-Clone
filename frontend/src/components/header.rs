@@ -1,12 +1,12 @@
 use yew_router::prelude::*;
 use yew::{prelude::*, function_component, html, Html};
 use crate::route::AppRoute;
-use crate::state_provider::{StateContext, Action, use_cart_context};
+use crate::hooks::cart_state::{CartContext, Action, use_cart_context};
 
 #[function_component(Header)]
 pub fn setup_header() -> Html {
-
     let subtotal = use_cart_context();
+
 
     html! {
         <>
@@ -20,6 +20,8 @@ pub fn setup_header() -> Html {
                     </div>
                     <div class="header__nav">
                         //  Sign In Page
+
+                        
                         <div class="header__option">
                             <span class="header__option1">{"Hello Guest"}</span>                            
                             <Link<AppRoute> to={AppRoute::Signin}>

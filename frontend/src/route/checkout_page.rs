@@ -2,7 +2,7 @@ use yew::{prelude::*, function_component, html, Html};
 use crate::{
     components::{subtotal::Subtotal,
         checkout_product::CheckOutProduct,
-    }, state_provider::use_cart_context};
+    }, hooks::cart_state::use_cart_context};
 // use crate::types::ProductType;
 use crate::components::product::{Product, ProductProps};
 #[function_component(Checkout)]

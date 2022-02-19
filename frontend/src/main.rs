@@ -1,7 +1,7 @@
 pub mod app;
 pub mod components;
 pub mod route;
-pub mod state_provider;
+pub mod hooks;
 pub mod types;
 
 use wasm_bindgen::prelude::*;

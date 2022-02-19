@@ -1,6 +1,6 @@
 use yew::{prelude::*, function_component, html, Html};
 use super::product::ProductProps;
-use crate::state_provider::{use_cart_context, Action};
+use crate::hooks::cart_state::{use_cart_context, Action};
 
 #[function_component(CheckOutProduct)]
 pub fn checkout_list(ProductProps { id, title, image, rating, price }: &ProductProps) -> Html {

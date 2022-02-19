@@ -7,7 +7,7 @@ use std::fmt::{Display, Formatter, Result};
 use crate::components::product::ProductProps;
 
 #[derive(PartialEq, Clone, Default)]
-pub struct State {
+pub struct Cart {
     pub basket: Vec<ProductProps>
 }
 
@@ -15,7 +15,7 @@ pub enum Action {
     AddToCart(ProductProps),
     RemoveToCart(i32)
 }
-impl Reducible for State {
+impl Reducible for Cart {
     type Action = Action;
 
     fn reduce(self: Rc<Self>, action: Self::Action) -> Rc<Self> {
@@ -41,33 +41,33 @@ impl Reducible for State {
             },
         };
 
-        State { 
+        Cart { 
             basket: basket,
         }.into()
     }
 }
 
-pub type StateContext = UseReducerHandle<State>;
+pub type CartContext = UseReducerHandle<Cart>;
 
 #[derive(Properties, PartialEq)]
-pub struct StateProviderProps {
+pub struct CartProviderProps {
     #[prop_or_default]
     pub children: Children,
 }
 
-pub fn use_cart_context() -> StateContext { 
-    let msg = use_context::<StateContext>().expect("Use_cart_product didnt wanna work lol");
+pub fn use_cart_context() -> CartContext { 
+    let msg = use_context::<CartContext>().expect("Use_cart_product didnt wanna work lol");
     msg
 }
 
-#[function_component(StateProvider)]
-pub fn stateprovider(props: &StateProviderProps) -> Html {
-    let msg = use_reducer(State::default);
+#[function_component(CartProvider)]
+pub fn cartprovider(props: &CartProviderProps) -> Html {
+    let msg = use_reducer(Cart::default);
 
     html! {
-        <ContextProvider<StateContext> context={msg}>
+        <ContextProvider<CartContext> context={msg}>
         { for props.children.iter() }
-        </ContextProvider<StateContext>>
+        </ContextProvider<CartContext>>
     }
 }
 

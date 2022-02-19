@@ -1,5 +1,5 @@
 use yew::{prelude::*, function_component, html, Html};
-use crate::state_provider::{StateContext, Action, use_cart_context};
+use crate::hooks::cart_state::{CartContext, Action, use_cart_context};
 // use crate::types::ProductType;
 #[derive(Properties, PartialEq, Clone)] 
 pub struct ProductProps {
