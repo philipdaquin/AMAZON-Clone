@@ -1,14 +1,31 @@
 use web_sys::HtmlInputElement;
 use yew::{prelude::*, function_component, html, Html};
 use yew_router::prelude::*;
+use yew_hooks::use_async;
 use super::AppRoute;
-use crate::types::*;
+use crate::hooks::user_state::*;
+use crate::types::{LoginInfo, LoginInfoWrapper};
+use crate::services::auth::*;
 
 
 #[function_component(Signin)]
 pub fn signin() -> Html {
 
     let login = use_state(LoginInfo::default);
+    
+    let user_login = {
+        let login = login.clone();
+        use_async(async move  { 
+            let request = LoginInfoWrapper { 
+                user: (*login).clone()
+            };
+            login(request).await
+
+
+        })
+    };
+    
+    
     let (email, password) = (login.email.clone(), login.password.clone());
     //  Inputing Login Information
     let set_email = { 
@@ -42,6 +59,7 @@ pub fn signin() -> Html {
         Callback::from(move |e: FocusEvent| { 
             e.prevent_default();
             // Do Something AWS register 
+            
         })
     };
 
@@ -62,13 +80,13 @@ pub fn signin() -> Html {
                         <input type="text" placeholder="Email" value={email} oninput={set_email} />
                         <h5>{"Password"}</h5>
                         <input type="text" placeholder="Password" value={password} oninput={set_password}/>
-                        <button type="submit" class="login__siginbutton" onclick={sign_in}>{"Sign In"}</button>
+                        // <button type="submit" class="login__siginbutton" onclick={sign_in}>{"Sign In"}</button>
                     </form>
                     <p>
                         {"By signing-in you agree to the AMAZON FAKE CLONE Conditions of Use & Sale. Please
                         see our Privacy Notice, our Cookies Notice and our Interest-Based Ads Notice."}
                     </p>
-                    <button class="login__registration" onclick={register_user}>{"Create your Amazon Account"}</button>
+                    // <button class="login__registration" onclick={register_user}>{"Create your Amazon Account"}</button>
                 </div>
             </div>
         </>
