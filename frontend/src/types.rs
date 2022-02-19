@@ -22,3 +22,16 @@ pub struct LoginInfo {
     pub email: String, 
     pub password: String 
 }
+#[derive(Clone, Debug, Default)]
+pub struct LoginInfoWrapper { 
+    pub user: LoginInfo
+}
+#[derive(Clone, Debug, PartialEq, Default)]
+pub struct UserInfo  { 
+    pub email: String, 
+    pub token: String,
+    pub username: String,
+    pub bio: Option<String>,
+    pub image: Option<String> 
+}
+

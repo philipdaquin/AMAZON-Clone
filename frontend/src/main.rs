@@ -3,6 +3,8 @@ pub mod components;
 pub mod route;
 pub mod hooks;
 pub mod types;
+pub mod services;
+pub mod error;
 
 use wasm_bindgen::prelude::*;
 use crate::app::App;
