@@ -2,14 +2,16 @@ use gloo::storage::{LocalStorage, Storage};
 use gloo_console::log;
 use lazy_static::lazy_static;
 use parking_lot::RwLock;
-use dotenv::dotenv;
-
+use dotenv_codegen;
+use crate::types::ErrorInfo;
 use reqwest::Method;
 use serde::{de::DeserializeOwned, Serialize};
 use std::fmt::Debug;
-use crate::error::Error;
+use crate::error::ServiceError;
 
-const API_ROOT: &str = env!("API_ROOT");
+
+// TODO 
+const API_ROOT: &str = dotenv!("API_ROOT");
 const TOKEN_KEY: &str = "token";
 lazy_static! { 
     //  JWT read from local storage 
@@ -40,7 +42,7 @@ pub async fn request<B, T>(
     method: Method,
     url: String, 
     body: B
-) -> Result<T, Error> where 
+) -> Result<T, ServiceError> where 
         T: DeserializeOwned + 'static + Debug,
         B: Serialize + Debug  {
             let allowed_body = method == reqwest::Method::POST || method == reqwest::Method::PUT;
@@ -58,19 +60,67 @@ pub async fn request<B, T>(
             
             let response = builder.send().await;
 
-            if let Ok(data) = response  { 
-                if data.status().is_success() { 
+            if let Ok(data) = response {
+                if data.status().is_success() {
                     let data: Result<T, _> = data.json::<T>().await;
-                    match data { 
-                        Ok(data) => { 
-                            log::debug!("Response: {:?}", data);
-                            Ok(data)
-                         },
-                        
-                        
+                    if let Ok(data) = data {
+                        log::debug!("Response: {:?}", data);
+                        Ok(data)
+                    } else {
+                        Err(ServiceError::DeserializeError)
+                    }
+                } else {
+                    match data.status().as_u16() {
+                        401 => Err(ServiceError::UnAuthorised),
+                        403 => Err(ServiceError::Forbidden),
+                        404 => Err(ServiceError::NotFound),
+                        500 => Err(ServiceError::InternalServerError),
+                        422 => {
+                            let data: Result<ErrorInfo, _> = data.json::<ErrorInfo>().await;
+                            if let Ok(data) = data {
+                                Err(ServiceError::UnprocessableEntity(data))
+                            } else {
+                                Err(ServiceError::DeserializeError)
+                            }
+                        }
+                        _ => Err(ServiceError::RequestError),
                     }
                 }
+            } else {
+                Err(ServiceError::RequestError)
             }
-           
-            Err(Error::Forbidden)
+}
+//  Delete Request
+pub async fn request_delete<T>(url: String) -> Result<T, ServiceError> 
+where T: DeserializeOwned  + 'static +  Debug, { 
+    request(reqwest::Method::DELETE, url, ()).await
+}
+//  Get Request 
+//  Delete Request
+pub async fn request_get<T>(url: String) -> Result<T, ServiceError> 
+where T: DeserializeOwned  + 'static +  Debug, { 
+    request(reqwest::Method::GET, url, ()).await
+}
+//  Get Request 
+//  Delete Request
+pub async fn request_post<B, T>(url: String, body: B) -> Result<T, ServiceError>
+where
+    T: DeserializeOwned + 'static + std::fmt::Debug,
+    B: Serialize + std::fmt::Debug,
+{
+    request(reqwest::Method::POST, url, body).await
+}
+
+//  Delete Request
+pub async fn request_put<T, B>(url: String, body: B) -> Result<T, ServiceError> 
+where T: DeserializeOwned  + 'static +  Debug,
+    B: Serialize + Debug
+{ 
+    request(reqwest::Method::PUT, url, body).await
+}
+pub fn limit(count: u32, p: u32) -> String { 
+    let offset = if p > 0  { 
+        p * count 
+    } else { 0};
+    format!("limit={}&offset={}", count, offset)
 }
