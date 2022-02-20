@@ -44,3 +44,35 @@ pub struct ErrorInfo {
 pub struct UserInfoWrapper { 
     pub user_info: UserInfo,   
 }
+
+
+
+#[derive(Serialize, Deserialize, Clone, Debug, Default)]
+#[serde(rename_all = "camelCase")]
+pub struct UserUpdateInfo {
+    pub email: String,
+    pub username: String,
+    pub password: Option<String>,
+    pub image: String,
+    pub bio: String,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct UserUpdateInfoWrapper {
+    pub user: UserUpdateInfo,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, Default)]
+#[serde(rename_all = "camelCase")]
+pub struct RegisterInfo {
+    pub username: String,
+    pub email: String,
+    pub password: String,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct RegisterInfoWrapper {
+    pub user: RegisterInfo,
+}

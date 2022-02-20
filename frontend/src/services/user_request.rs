@@ -2,7 +2,7 @@ use gloo::storage::{LocalStorage, Storage};
 use gloo_console::log;
 use lazy_static::lazy_static;
 use parking_lot::RwLock;
-use dotenv_codegen;
+use dotenv_codegen::{self, dotenv};
 use crate::types::ErrorInfo;
 use reqwest::Method;
 use serde::{de::DeserializeOwned, Serialize};
@@ -112,9 +112,9 @@ where
 }
 
 //  Delete Request
-pub async fn request_put<T, B>(url: String, body: B) -> Result<T, ServiceError> 
-where T: DeserializeOwned  + 'static +  Debug,
-    B: Serialize + Debug
+pub async fn request_put<B, T>(url: String, body: B) -> Result<T, ServiceError> 
+where  T: DeserializeOwned + 'static + std::fmt::Debug,
+B: Serialize + std::fmt::Debug,
 { 
     request(reqwest::Method::PUT, url, body).await
 }

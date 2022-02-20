@@ -24,6 +24,9 @@ pub fn signin() -> Html {
 
         })
     };
+
+
+    
     
     
     let (email, password) = (login.email.clone(), login.password.clone());
@@ -49,21 +52,21 @@ pub fn signin() -> Html {
     };
 
     let sign_in = {
-        Callback::from(move |e: FocusEvent| { 
-            //  Prevent refreshing
+        let user_login = user_login.clone();
+        Callback::from(move |e: MouseEvent| { 
             e.prevent_default();
+            let user_login = user_login.clone();
+            user_login.run()
             //  Login stuff
         })
     };
     let register_user = { 
-        Callback::from(move |e: FocusEvent| { 
+        Callback::from(move |e: MouseEvent| { 
             e.prevent_default();
             // Do Something AWS register 
             
         })
     };
-
-
 
     html! {
         <>
@@ -80,13 +83,13 @@ pub fn signin() -> Html {
                         <input type="text" placeholder="Email" value={email} oninput={set_email} />
                         <h5>{"Password"}</h5>
                         <input type="text" placeholder="Password" value={password} oninput={set_password}/>
-                        // <button type="submit" class="login__siginbutton" onclick={sign_in}>{"Sign In"}</button>
+                        <button type="submit" class="login__siginbutton" onclick={sign_in}>{"Sign In"}</button>
                     </form>
                     <p>
                         {"By signing-in you agree to the AMAZON FAKE CLONE Conditions of Use & Sale. Please
                         see our Privacy Notice, our Cookies Notice and our Interest-Based Ads Notice."}
                     </p>
-                    // <button class="login__registration" onclick={register_user}>{"Create your Amazon Account"}</button>
+                    <button class="login__registration" onclick={register_user}>{"Create your Amazon Account"}</button>
                 </div>
             </div>
         </>
