@@ -1,7 +1,9 @@
-use thiserror::Error;
+use thiserror::Error as Errors;
 
-#[derive(Error, Clone, Debug, PartialEq)]
-pub enum Error { 
+use crate::types::ErrorInfo;
+
+#[derive(Errors, Clone, Debug, PartialEq)]
+pub enum ServiceError { 
     #[error("UnAuthorised Access")]
     UnAuthorised, 
 
@@ -18,5 +20,8 @@ pub enum Error {
     DeserializeError,
 
     #[error("Http Request Error")]
-    RequestError
+    RequestError,
+
+    #[error("Unprocessable Entity: {0:?}")]
+    UnprocessableEntity(ErrorInfo)
 }

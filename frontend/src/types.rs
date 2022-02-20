@@ -1,6 +1,7 @@
 use std::{fmt::{Display, Formatter, Result}};
+use serde::{Serialize, Deserialize};
 use yew::prelude::*;
-
+use std::collections::HashMap;
 // Products 
 #[derive(PartialEq, Properties, Clone)]
 pub struct ProductType { 
@@ -17,16 +18,16 @@ pub struct CartProduct {
     pub quantity: i32
 }
 //  User Login
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct LoginInfo {
     pub email: String, 
     pub password: String 
 }
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct LoginInfoWrapper { 
     pub user: LoginInfo
 }
-#[derive(Clone, Debug, PartialEq, Default)]
+#[derive(Clone, Debug, PartialEq, Default, Serialize, Deserialize)]
 pub struct UserInfo  { 
     pub email: String, 
     pub token: String,
@@ -35,3 +36,11 @@ pub struct UserInfo  {
     pub image: Option<String> 
 }
 
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct ErrorInfo { 
+    pub errors: HashMap<String, Vec<String>>
+}
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct UserInfoWrapper { 
+    pub user_info: UserInfo,   
+}

@@ -3,9 +3,9 @@ use yew::{prelude::*, function_component, html, Html};
 use yew_router::prelude::*;
 use yew_hooks::use_async;
 use super::AppRoute;
-use crate::hooks::user_state::*;
+use crate::hooks::user_state;
 use crate::types::{LoginInfo, LoginInfoWrapper};
-use crate::services::auth::*;
+use crate::services::auth::{login_user};
 
 
 #[function_component(Signin)]
@@ -19,7 +19,7 @@ pub fn signin() -> Html {
             let request = LoginInfoWrapper { 
                 user: (*login).clone()
             };
-            login(request).await
+            login_user(request).await
 
 
         })
