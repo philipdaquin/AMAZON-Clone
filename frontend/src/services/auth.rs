@@ -12,12 +12,12 @@ pub async fn current_user() -> Result<UserInfoWrapper, ServiceError> {
     request_get::<UserInfoWrapper>("/user".to_string()).await
 }
 /// Register a new user
-pub async fn register(register_info: RegisterInfoWrapper) -> Result<UserInfoWrapper, ServiceError> {
+pub async fn register_user(register_info: RegisterInfoWrapper) -> Result<UserInfoWrapper, ServiceError> {
     request_post::<RegisterInfoWrapper, UserInfoWrapper>("/users".to_string(), register_info).await
 }
 
 /// Save info of current user
-pub async fn save(user_update_info: UserUpdateInfoWrapper) -> Result<UserInfoWrapper, ServiceError> {
+pub async fn save_user(user_update_info: UserUpdateInfoWrapper) -> Result<UserInfoWrapper, ServiceError> {
     request_put::<UserUpdateInfoWrapper, UserInfoWrapper>("/user".to_string(), user_update_info)
         .await
 }

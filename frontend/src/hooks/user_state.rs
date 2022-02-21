@@ -48,6 +48,33 @@ pub fn user_context_handler() -> UserContextHandler {
     UserContextHandler { inner, history }
 }
 
+impl Deref for UserContextHandler {
+    type Target = UserInfo;
+
+    fn deref(&self) -> &Self::Target {
+        &(*self.inner)
+    }
+}
+
+impl Clone for UserContextHandler {
+    fn clone(&self) -> Self {
+        Self {
+            inner: self.inner.clone(),
+            history: self.history.clone(),
+        }
+    }
+}
+
+impl PartialEq for UserContextHandler {
+    fn eq(&self, other: &Self) -> bool {
+        *self.inner == *other.inner
+    }
+}
+
+
+
+
+
 #[function_component(UserContext)]
 pub fn usercontext(UserProviderProps { children }: &UserProviderProps) -> Html {
     
