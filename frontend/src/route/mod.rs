@@ -3,8 +3,9 @@ pub mod checkout_page;
 pub mod order;
 pub mod prime;
 pub mod signin;
+pub mod register_user;
 use crate::route::{ home::Home, checkout_page::Checkout, 
-    signin::Signin, order::Order,  prime::Prime, 
+    signin::Signin, order::Order,  prime::Prime, register_user::RegisterUser 
 };
 use yew_router::prelude::*;
 use yew::prelude::*;
@@ -28,6 +29,9 @@ pub enum AppRoute {
     #[at("/prime")] 
     Prime,
 
+    #[at("/register_user")] 
+    Register,
+
 
 }
 pub fn switch(routes: &AppRoute) -> Html { 
@@ -37,6 +41,7 @@ pub fn switch(routes: &AppRoute) -> Html {
         AppRoute::Signin => html! { <Signin />},
         AppRoute::Order => html! { <Order />},
         AppRoute::Prime => html! { <Prime />},
+        AppRoute::Register => html! { <RegisterUser />},
 
     }
 }

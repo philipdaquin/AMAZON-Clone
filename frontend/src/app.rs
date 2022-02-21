@@ -5,7 +5,7 @@ use crate::components::{
 };
 use crate::route::home::Home;
 use crate::route::{switch, AppRoute};
-use crate::hooks::cart_state::CartProvider;
+use crate::hooks::{cart_state::CartProvider, user_state::UserContext};
 
 
 pub struct App { 
@@ -33,17 +33,17 @@ impl Component for App {
     }
     fn view(&self, ctx: &Context<Self>) -> Html {
         
-            
         html! {
-            <CartProvider>
-                <BrowserRouter>
-                    <Header/>
-                        <Switch<AppRoute> render={Switch::render(switch)} />
-                    <Footer/>
-                </BrowserRouter>
-            </CartProvider>
+            <UserContext>
+                <CartProvider>
+                    <BrowserRouter>
+                        <Header/>
+                            <Switch<AppRoute> render={Switch::render(switch)} />
+                        <Footer/>
+                    </BrowserRouter>
+                </CartProvider>
+            </ UserContext>
         }
-        
     }
 }
 
