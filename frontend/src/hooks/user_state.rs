@@ -1,4 +1,5 @@
-use core::fmt;
+use core::{fmt, ops::Deref};
+use lazy_static::__Deref;
 use yew_hooks::{use_async, use_mount};
 use yew::{prelude::*, function_component, html, Html};
 use yew_router::history::{AnyHistory, History};
@@ -14,8 +15,6 @@ pub struct UserProviderProps {
     #[prop_or_default]
     pub children: Children
 }
-
-#[derive(Clone, PartialEq)]
 pub struct UserContextHandler { 
     pub inner: UseStateHandle<UserInfo>,
     pub history: AnyHistory

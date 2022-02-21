@@ -23,6 +23,7 @@ pub struct LoginInfo {
     pub email: String, 
     pub password: String 
 }
+
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct LoginInfoWrapper { 
     pub user: LoginInfo
@@ -48,7 +49,6 @@ pub struct UserInfoWrapper {
 
 
 #[derive(Serialize, Deserialize, Clone, Debug, Default)]
-#[serde(rename_all = "camelCase")]
 pub struct UserUpdateInfo {
     pub email: String,
     pub username: String,
@@ -58,13 +58,11 @@ pub struct UserUpdateInfo {
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
-#[serde(rename_all = "camelCase")]
 pub struct UserUpdateInfoWrapper {
     pub user: UserUpdateInfo,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, Default)]
-#[serde(rename_all = "camelCase")]
 pub struct RegisterInfo {
     pub username: String,
     pub email: String,
@@ -72,7 +70,12 @@ pub struct RegisterInfo {
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
-#[serde(rename_all = "camelCase")]
 pub struct RegisterInfoWrapper {
     pub user: RegisterInfo,
+}
+
+impl UserInfo {
+    pub fn is_authenticated(&self) -> bool {
+        !self.token.is_empty()
+    }
 }
