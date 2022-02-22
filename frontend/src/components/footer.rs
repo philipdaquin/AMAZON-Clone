@@ -4,6 +4,7 @@ use yew::{prelude::*, function_component, html, Html};
 pub fn setup_footer() -> Html {
     html! {
         <>
+        <section class="flex-wrapper">
             <footer>
                 <div class="top text-center">
                 <a href="#nav-top">{"Back to top"}</a>
@@ -131,6 +132,7 @@ pub fn setup_footer() -> Html {
                     </div>
                 </div>
             </footer>
+            </section>
         </>
     }
 }
