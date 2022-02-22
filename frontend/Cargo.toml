@@ -26,6 +26,8 @@ reqwest = { version = "0.11.7", features = ["json"] }
 thiserror = "1.0.0"
 log = "0.4.8"
 chrono = { version = "0.4", features = ["serde"] }
+wee_alloc = "0.4.5"
+
 
 [dependencies.web-sys]
 version = "0.3"
@@ -36,3 +38,13 @@ features = [
     "MouseEvent",
     "DomRect",
 ]
+
+[profile.release]
+# Less code to include into binary
+panic = 'abort'
+# Optimization over all codebase ( better optimization, slower build )
+codegen-units = 1
+# Optimization for size ( most aggressive )
+opt-level = 'z'
+# Link time optimization using using whole-program analysis
+lto = true

@@ -15,7 +15,7 @@ pub fn setup_header() -> Html {
         if user_context.is_authenticated() { 
             html! { 
                 <div class="header__option">
-                    <span class="header__option1">{"Hello"}{user_context.username.clone}</span>                            
+                    <span class="header__option1">{"Hello"}{user_context.username.clone()}</span>                            
                     <Link<AppRoute> to={AppRoute::Signout}>
                         <span class="header__option2">{"Sign Out"}</span>
                     </Link<AppRoute>>

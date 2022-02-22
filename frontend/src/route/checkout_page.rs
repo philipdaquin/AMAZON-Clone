@@ -23,6 +23,8 @@ pub fn checkout() -> Html {
             />
         </>
     }).collect();
+
+
     html! {
         <>
             <div class="checkout">
