@@ -8,8 +8,6 @@ use crate::{
     types::{RegisterInfoWrapper, RegisterInfo},
     services::auth,
 };
-
-
 #[function_component(RegisterUser)]
 pub fn register_user() -> Html {
     let user_context = user_context_handler();
@@ -75,9 +73,6 @@ pub fn register_user() -> Html {
             user_register.run()
         })  
     };
-
-    
-
 
     html! {
         <>

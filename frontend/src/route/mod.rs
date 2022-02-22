@@ -23,6 +23,9 @@ pub enum AppRoute {
     #[at("/signin")] 
     Signin,
 
+    #[at("/signout")] 
+    Signout,
+
     #[at("/order")] 
     Order,
 
@@ -40,6 +43,8 @@ pub fn switch(routes: &AppRoute) -> Html {
         AppRoute::Order => html! { <Order />},
         AppRoute::Prime => html! { <Prime />},
         AppRoute::Register => html! { <RegisterUser />},
+        AppRoute::Signout => html! { <Home />},
+        
 
     }
 }
