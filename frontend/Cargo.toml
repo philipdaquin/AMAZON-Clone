@@ -11,12 +11,10 @@ wasm-bindgen = "0.2.79"
 wasm-logger = "0.2.0"
 yew = "0.19.0"
 yew-router = "0.16.0"
-yew_styles = "0.11.0"
 yew-interop = {version = "0.3", features = ["script"]}
 serde = "1"
 anyhow = "1.0.32"
 gloo-console= "0.2.1"
-firebase-rs="2.0.1"
 yew-hooks = "0.1.32"
 parking_lot = "0.12.0"
 lazy_static = "1.4.0"
@@ -27,6 +25,10 @@ thiserror = "1.0.0"
 log = "0.4.8"
 chrono = { version = "0.4", features = ["serde"] }
 wee_alloc = "0.4.5"
+getrandom = { version = "0.2.5", features = ["js"] }
+async-std = { version = "1.7.0", features = ["attributes"] }
+async-stripe = { version = "0.13", features = ["runtime-async-std-surf"] }
+
 
 
 [dependencies.web-sys]

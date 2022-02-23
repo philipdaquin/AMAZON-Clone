@@ -43,9 +43,6 @@ pub enum AppRoute {
     #[at("/register_user")] 
     Register,
 
-
-
-
 }
 pub fn switch(routes: &AppRoute) -> Html { 
     match routes { 

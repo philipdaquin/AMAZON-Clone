@@ -39,7 +39,7 @@ impl Component for App {
                     <BrowserRouter>
                         <Header/>
                             <Switch<AppRoute> render={Switch::render(switch)} />
-                        <Footer/>
+                        // <Footer/>
                     </BrowserRouter>
                 </CartProvider>
             </ UserContext>
