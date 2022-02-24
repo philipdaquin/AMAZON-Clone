@@ -5,7 +5,8 @@ use crate::{
     route::AppRoute,
     components::{
         subtotal::Subtotal,
-        checkout_product::CheckOutProduct}, 
+        checkout_product::CheckOutProduct,
+        card_component::CardElement}, 
         hooks::{
             cart_state::use_cart_context, 
             user_state::user_context_handler}
@@ -31,6 +32,29 @@ pub fn paymentpage() -> Html {
                     price={item.price.clone()} />
             </>
     }).collect();
+
+
+
+    let error = use_state(|| None);
+    let disabled = use_state(|| true);
+
+
+    let onsubmit = {
+        Callback::from(move |e: FocusEvent| { 
+            //  Call stripe stuff
+        })
+    };
+
+    let handle_change = {
+        Callback::from(move |e: InputEvent | { 
+            // Listen for chages in the card element 
+            // and display any errors as the customer types their card details 
+        })
+    };
+    
+    //  Use Stripe 
+    //  Stripe elements 
+
     
     html! {
         <>
@@ -65,6 +89,9 @@ pub fn paymentpage() -> Html {
                             <h3>{"Payment Method"}</h3>
                         </div>
                         <div class="payment__details">
+                            <form action="" onsubmit={onsubmit}>
+                                <CardElement onchange={handle_change}/>                         
+                            </form>
                             // Strip Magic
                         </div>
                     </div>
