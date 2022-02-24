@@ -1,6 +1,16 @@
+use backend::server::new_server;
+use failure::Error;
 
 
+#[actix_web::main]
+async fn main() -> Result<(), Error> { 
+    let port = std::env::var("PORT")
+        .ok()
+        .and_then(|port| port.parse::<u32>().ok())
+        .unwrap_or(3000);
 
-fn main() {
-    println!("Hello, world!");
+
+    new_server(port)
+        .await
+        .map_err(Into::into)
 }
