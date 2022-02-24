@@ -60,8 +60,10 @@ pub fn paymentpage() -> Html {
                 
         })
         //  then paymentintent  => paymet intent = payment confirmration 
-        //  set succeeeded true 
-        //  set error nul l
+        //  setsucceeeded true 
+        //  seterror null
+        //  setprocessing false 
+        //  history.replace(/orders page)
     };
     //  Use Stripe 
     //  Stripe elements 
