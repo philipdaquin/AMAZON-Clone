@@ -5,3 +5,6 @@ tech stacks
 - Graphql        
 - Diesel        
 - Substrate   
+- PostgreSQL
+- Terraform 
+- AWS
