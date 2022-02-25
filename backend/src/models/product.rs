@@ -7,7 +7,7 @@ pub struct Product {
     pub id: i32, 
     pub title: String, 
     pub stock: f64,
-    pub rating: i32, 
+    pub rating: Option<f64>, 
     pub price: Option<i32>
 }
 
@@ -23,6 +23,11 @@ pub struct NewProduct {
 pub struct ProductList(pub Vec<Product>);
 
 impl ProductList  { 
+    pub fn create_product() -> Self { todo!() }
+    pub fn get_productinfo() -> Self { todo!() }
+    pub fn delete_product() -> Self { todo!() }
+    pub fn update_product() -> Self { todo!() }
+    
     pub fn list_products() -> Self { 
         use crate::schema::products::dsl::*;
         use crate::db::DbPool;

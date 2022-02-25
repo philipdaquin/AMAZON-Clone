@@ -3,6 +3,6 @@ CREATE TABLE products (
     id    SERIAL PRIMARY KEY,
     title VARCHAR NOT NULL,
     stock FLOAT NOT NULL,
-    rating INTEGER,
-    price INTEGER
+    rating FLOAT,
+    price INTEGER 
 )
