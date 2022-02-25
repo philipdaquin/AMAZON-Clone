@@ -10,7 +10,6 @@ pub struct Product {
     pub rating: Option<f64>, 
     pub price: Option<i32>
 }
-
 #[derive(Insertable)]
 #[table_name="products"]
 pub struct NewProduct { 
