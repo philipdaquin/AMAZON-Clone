@@ -13,7 +13,7 @@ pub enum DatabaseKind {
 }
 
 
-fn init_pool(database_url: &str) -> Result<DbPool, PoolError> {
+pub fn init_pool(database_url: &str) -> Result<DbPool, PoolError> {
     //  Connection manager for user with Diesel 
     let manager = ConnectionManager::<PgConnection>::new(database_url);
     //  Returns a new connection manager, which establishes connections to the given database URL
@@ -55,15 +55,3 @@ pub fn establish_connection(db_kind: DatabaseKind) -> DbPool {
     init_pool(&database_url)
         .unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
 }
-
-// pub fn establish_connection() -> PgConnection {
-//     dotenv().ok(); // Grab ENV vars from `.env`
-
-//     // Pull value from `DATABASE_URL` ENV var
-//     let database_url = env::var("DATABASE_URL")
-//         .expect("DATABASE_URL must be set");
-
-//     // Establishes a connection to the DB
-//     // https://docs.diesel.rs/diesel/connection/trait.Connection.html#tymethod.establish
-
-// }
