@@ -1,9 +1,7 @@
 use crate::schema::products;
-use diesel::{RunQueryDsl, QueryDsl, query_builder::AsQuery, };
-use crate::db::{establish_connection, DatabaseKind};
-use diesel::result::Error as DbError;
-use diesel::prelude::*;
-#[derive(Queryable, Serialize, Deserialize, PartialEq)]
+use diesel::{result::Error as DbError, PgConnection};
+#[derive(Queryable, Serialize, 
+    Deserialize, PartialEq, Debug, Clone, Identifiable)]
 pub struct Product { 
     pub id: i32, 
     pub title: String, 
@@ -46,21 +44,19 @@ impl ProductList  {
         Ok(())
 
     }
-    
-    pub fn list_products() -> Self { 
+    pub fn list_products(conn: &PgConnection) -> Self { 
         use crate::schema::products::dsl::*;
-        use crate::db::DbPool;
-        
-        let conn = establish_connection();
+        use diesel::{QueryDsl, RunQueryDsl};
+        // use crate::db::{DatabaseKind, establish_connection};
+        // let conns = establish_connection(DatabaseKind::ProductDb);
         let res = products
             .limit(10)
-            .load::<Product>(&conn)
+            .load::<Product>(conn)
             .expect("Error loading Products");
 
         ProductList(res)
     }
 }
-
 impl NewProduct { 
     pub fn create_product(&self) -> Result<Product, DbError> { 
         //  Insert new Product into database 
