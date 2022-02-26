@@ -1,5 +1,8 @@
-use crate::handlers::{product::{self, index}};
+use crate::handlers::{product::{self, 
+    index, create_newproduct, get_info, delete_product, update_product
+}};
 use actix_web::{web, App, HttpRequest, HttpServer, Responder};
+
 
 
 pub async fn new_server(port: u32) -> std::io::Result<()> {
@@ -7,22 +10,22 @@ pub async fn new_server(port: u32) -> std::io::Result<()> {
         //  App Routes
         App::new()
             //  Everything under /product/
-            .service(web::resource("/product/")
-                //  Creates a new product and returns its id    
-                //.route("", web::post().to())
-                //  Returns information about the product with id
-                //.route("{id}", web::get().to())
-                //  Updates information about the product with id
-                //.route("/product/{id}", web::put().to())
-                //  Marks the product with id as delete
-                //.route("/product/{id}", web::delete().to())
+            .service(
+                web::resource("/product")
                 //  Returns a list of all products 
                 .route(web::get().to(index))
-            
-        )
-
-        
-
+                //  Creates a new product and returns its id    
+                .route(web::post().to(create_newproduct))
+            )
+            .service(
+                web::resource("/product/{id}")
+                //  Returns information about the product with id
+                .route(web::get().to(get_info))
+                //  Marks the product with id as delete
+                .route(web::delete().to(delete_product))
+                //  Updates information about the product with id
+                .route(web::put().to(update_product))
+            )
     })
     .bind(format!("127.0.0.1:{}", port))?
     .run()
