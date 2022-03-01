@@ -30,13 +30,31 @@ getrandom = { version = "0.2.5", features = ["js"] }
 
 
 [dependencies.web-sys]
-version = "0.3"
+version = "0.3.56"
 features = [
-    "console",
-    "Document",
-    "HtmlElement",
-    "MouseEvent",
-    "DomRect",
+    'Headers',
+    'Request',
+    'RequestInit',
+    'RequestMode',
+    'Response',
+    'Window',
+    'Document',
+    'Element',
+    'HtmlElement',
+    'HtmlInputElement',
+    'HtmlButtonElement',
+    'HtmlFormElement',
+    'HtmlCollection',
+    'MouseEvent',
+    'Node',
+    'History',
+    'Event',
+    'EventTarget',
+    'ErrorEvent',
+    'Location',
+    'console',
+    'MouseEvent',
+    'DomRect',
 ]
 
 [profile.release]
@@ -48,3 +66,4 @@ codegen-units = 1
 opt-level = 'z'
 # Link time optimization using using whole-program analysis
 lto = true
+debug =true
