@@ -13,7 +13,7 @@ dotenv = "0.15.0"
 actix-web = "3.3.3"
 actix-web-lab = "0.12.0"
 actix-cors = "0.5.4"
-juniper = "0.15"
+juniper = "0.15.9"
 env_logger = "0.9"
 log = "0.4"
 serde = { version = "1", features = ["derive"] }
