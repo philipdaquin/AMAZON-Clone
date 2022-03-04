@@ -1,6 +1,6 @@
 use crate::handlers::{product::{self, 
     index, create_newproduct, get_info, delete_product, update_product
-}};
+}, payment::handle_stripe};
 use actix_web::{web, App, HttpRequest, HttpServer, Responder, http::header};
 use actix_cors::Cors;
 use crate::db::{establish_connection, DatabaseKind};
@@ -40,7 +40,7 @@ pub async fn new_server(port: u32) -> std::io::Result<()> {
             .service(
                 web::scope("/payment")
                 .service(web::resource("/create")
-                    .route(web::post().to(_))
+                    .route(web::post().to(handle_stripe))
                 )
                 
             )
