@@ -37,7 +37,7 @@ pub enum AppRoute {
     #[at("/prime")] 
     Prime,
 
-    #[at("/paymentpage")] 
+    #[at("/payment")] 
     PaymentPage,
 
     #[at("/register_user")] 

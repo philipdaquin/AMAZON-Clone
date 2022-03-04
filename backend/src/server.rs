@@ -7,6 +7,7 @@ use crate::db::{establish_connection, DatabaseKind};
 
 
 pub async fn new_server(port: u32) -> std::io::Result<()> {
+    
     HttpServer::new(move || {
         //  App Routes
         App::new()
@@ -35,6 +36,13 @@ pub async fn new_server(port: u32) -> std::io::Result<()> {
                 .route(web::delete().to(delete_product))
                 //  Updates information about the product with id
                 .route(web::put().to(update_product))
+            )
+            .service(
+                web::scope("/payment")
+                .service(web::resource("/create")
+                    .route(web::post().to(_))
+                )
+                
             )
     })
     .bind(format!("127.0.0.1:{}", port))?

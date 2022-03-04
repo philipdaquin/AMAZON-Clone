@@ -3,6 +3,7 @@ use crate::models::product::{ProductList, NewProduct, Product};
 use crate::db::{DbPool, DbPooledConnection};
 
 
+
 pub async fn index(req: HttpRequest, db: web::Data<DbPool>) -> Result<HttpResponse, HttpResponse> { 
     let db_pool = db_handler(db)?; 
     Ok(HttpResponse::Ok()
@@ -52,3 +53,5 @@ pub fn db_handler(pool: web::Data<DbPool>) -> Result<DbPooledConnection, HttpRes
     .map_err(|error| 
         HttpResponse::InternalServerError().json(error.to_string()))
 }
+
+
