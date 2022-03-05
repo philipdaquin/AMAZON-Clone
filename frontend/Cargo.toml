@@ -7,12 +7,12 @@ edition = "2021"
 
 [dependencies]
 js-sys = "0.3.56"
-wasm-bindgen = "0.2.79"
+wasm-bindgen = { version = "0.2.45", features = ["serde-serialize"]  }
 wasm-logger = "0.2.0"
 yew = "0.19.0"
 yew-router = "0.16.0"
 yew-interop = {version = "0.3", features = ["script"]}
-serde = "1"
+serde = { version = "1.0.80", features = ["derive"] }
 anyhow = "1.0.32"
 gloo-console= "0.2.1"
 yew-hooks = "0.1.32"
@@ -20,13 +20,16 @@ parking_lot = "0.12.0"
 lazy_static = "1.4.0"
 gloo = "0.4.0"
 dotenv_codegen = "0.15.0"
+serde_derive = "^1.0.59"
+serde_json = "1"
 reqwest = { version = "0.11.7", features = ["json"] }
 thiserror = "1.0.0"
 log = "0.4.8"
 chrono = { version = "0.4", features = ["serde"] }
 wee_alloc = "0.4.5"
 getrandom = { version = "0.2.5", features = ["js"] }
-
+wasm-bindgen-futures = "0.3.22"
+futures = { version = "0.1.20", features = ["use_std"] }
 
 
 [dependencies.web-sys]
