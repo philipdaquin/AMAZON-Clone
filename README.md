@@ -1,8 +1,9 @@
 # Amazon-Clone [WIP]
 Left To Do: 
--  Fix Authentication and Fetch Request (Frontend)
--  Integrate Stripe Payment Service + User Order History 
+-  FIX Fetch Request on (Frontend)
+-  TEST Stripe Payment Service + User Order History 
 -  Deploy to AWS and Use Terraform 
+-  Elastic Search
 -  Refactor REST APIs to GraphQL, ensuring to document this stage
 
 ## High-Level Design: Main Components

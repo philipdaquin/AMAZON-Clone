@@ -12,27 +12,29 @@ use serde::Serialize;
 const BASE_URL: &str = "http://localhost:8088";
 
 #[wasm_bindgen]
-pub fn fetch_request(url: &str,
-                     method: &str,
-                     body: Option<String>) -> Promise {
+pub fn fetch_request(
+    url: &str,
+    method: &str,
+    body: Option<String>
+) -> Promise {
     let mut opts = RequestInit::new();
     opts.method(method);
     opts.mode(RequestMode::Cors);
+    
     if let Some(body_string) = body {
         let js_value = JsValue::from_str(&body_string);
         opts.body(Some(&js_value));
     }
 
     let request = Request::new_with_str_and_init(&format!("{}/{}", BASE_URL, url), &opts).unwrap();
-
     request
         .headers()
         .set("Content-Type", "application/json").unwrap();
 
-    let window = web_sys::window().ok_or_else(|| JsValue::from_str("Could not get a window object")).unwrap();
-    let request_promise = 
-        window
-            .fetch_with_request(&request);
+    let window = web_sys::window()
+    .ok_or_else(|| JsValue::from_str("Could not get a window object")).unwrap();
+    
+    let request_promise = window.fetch_with_request(&request);
 
     let future = JsFuture::from(request_promise)
         .and_then(|resp_value| {
