@@ -30,7 +30,7 @@ wee_alloc = "0.4.5"
 getrandom = { version = "0.2.5", features = ["js"] }
 wasm-bindgen-futures = "0.3.22"
 futures = { version = "0.1.20", features = ["use_std"] }
-
+dotenv="0.15.0"
 
 [dependencies.web-sys]
 version = "0.3.56"

@@ -11,7 +11,6 @@ use crate::error::ServiceError;
 
 
 // TODO 
-const API_ROOT: &str = dotenv!("API_ROOT");
 const TOKEN_KEY: &str = "token";
 lazy_static! { 
     //  JWT read from local storage 
@@ -45,8 +44,9 @@ pub async fn request<B, T>(
 ) -> Result<T, ServiceError> where 
         T: DeserializeOwned + 'static + Debug,
         B: Serialize + Debug  {
+            let api_root: &str = &std::env::var("API_ROOT").expect("You must set an API KEY");
             let allowed_body = method == reqwest::Method::POST || method == reqwest::Method::PUT;
-            let url = format!("{}{}", API_ROOT, url);
+            let url = format!("{}{}", api_root, url);
             let mut builder = reqwest::Client::new()
                 .request(method, url)
                 .header("Content-Type", "application/json");

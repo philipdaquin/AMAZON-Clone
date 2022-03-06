@@ -1771,6 +1771,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "chrono",
+ "dotenv",
  "dotenv_codegen",
  "futures 0.1.31",
  "getrandom 0.2.5",

@@ -5,8 +5,13 @@ extern crate dotenv_codegen;
 
 use wasm_bindgen::prelude::*;
 use crate::app::App;
+extern crate dotenv;
+use dotenv::dotenv;
+use dotenv_codegen::dotenv;
 
-const API_URL: &str = dotenv!("API_URL");
+
+
+// const API_URL: &str = &std::env::var("API_URL").expect("You must set an API KEY");
 
 pub mod app;
 pub mod components;
