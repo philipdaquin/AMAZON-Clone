@@ -1,4 +1,4 @@
-use backend::server::new_server;
+use inventory::server::new_server;
 use failure::Error;
 
 
