@@ -5,7 +5,7 @@ use super::user_request::{request_get, request_post, request_put};
 
 /// Login a user
 pub async fn login_user(login_info: LoginInfoWrapper) -> Result<UserInfoWrapper, ServiceError> {
-    request_post::<LoginInfoWrapper, UserInfoWrapper>("/users/login".to_string(), login_info).await
+    request_post::<LoginInfoWrapper, UserInfoWrapper>("/user/auth".to_string(), login_info).await
 }
 
 pub async fn current_user() -> Result<UserInfoWrapper, ServiceError> { 
@@ -13,7 +13,7 @@ pub async fn current_user() -> Result<UserInfoWrapper, ServiceError> {
 }
 /// Register a new user
 pub async fn register_user(register_info: RegisterInfoWrapper) -> Result<UserInfoWrapper, ServiceError> {
-    request_post::<RegisterInfoWrapper, UserInfoWrapper>("/users".to_string(), register_info).await
+    request_post::<RegisterInfoWrapper, UserInfoWrapper>("/user/register".to_string(), register_info).await
 }
 
 /// Save info of current user

@@ -44,9 +44,9 @@ pub async fn request<B, T>(
 ) -> Result<T, ServiceError> where 
         T: DeserializeOwned + 'static + Debug,
         B: Serialize + Debug  {
-            let api_root: &str = &std::env::var("API_ROOT").expect("You must set an API KEY");
+            let api_url: &str = &std::env::var("API_URL").expect("You must set an API KEY");
             let allowed_body = method == reqwest::Method::POST || method == reqwest::Method::PUT;
-            let url = format!("{}{}", api_root, url);
+            let url = format!("{}{}", api_url, url);
             let mut builder = reqwest::Client::new()
                 .request(method, url)
                 .header("Content-Type", "application/json");
