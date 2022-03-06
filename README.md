@@ -5,7 +5,12 @@ Left To Do:
 -  Deploy to AWS and Use Terraform 
 -  Refactor REST APIs to GraphQL, ensuring to document this stage
 
-tech stack
+## High-Level Design: Main Components
+- Inventory
+- Delivery/Notification Service
+- Payment Services 
+- Cart 
+## Tech-stack
 - Yew         
 - Actix           
 - Graphql        
