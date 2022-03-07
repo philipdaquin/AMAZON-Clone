@@ -11,7 +11,7 @@ pub struct Product {
     pub price: Option<i32>,
     pub description: Option<String>
 }
-#[derive(Insertable, Deserialize, AsChangeset)]
+#[derive(Insertable, Deserialize, AsChangeset, Debug, Clone, PartialEq)]
 #[table_name="products"]
 pub struct NewProduct { 
     pub title: String,
@@ -20,6 +20,15 @@ pub struct NewProduct {
     pub description: Option<String>
 
 }
+
+type ProductColumns = (
+    products::id,
+    products::title,
+    products::stock,
+    products::rating,
+    products::price,
+    products::description,
+);
 
 #[derive(Serialize, Deserialize)]
 pub struct ProductList(pub Vec<Product>);
