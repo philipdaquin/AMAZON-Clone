@@ -61,7 +61,6 @@ impl ProductList  {
             .set(new_product)
             .execute(conn)?;
         Ok(())
-
     }
     pub fn list_products(conn: &PgConnection, search_input: &str) -> Self { 
         use crate::schema::{products::dsl::*, self};
@@ -69,7 +68,6 @@ impl ProductList  {
         use diesel_full_text_search::{plainto_tsquery, TsVectorExtensions};
 
         let mut query = schema::products::table.into_boxed::<Pg>();
-        
         if !search_input.is_empty() {
             query = query.filter(
                 text_searchable_product_col.matches(plainto_tsquery(search_input))
@@ -100,5 +98,18 @@ impl NewProduct {
             .on_conflict_do_nothing()
             .returning(PRODUCT_COLUMNS)
             .get_result(conn)
+    }
+}
+
+impl PartialEq<Product> for NewProduct { 
+    fn eq(&self, other: &Product) -> bool {
+        let new_product = self.clone();
+        let product = other.clone();
+
+        product.title == new_product.title && 
+        product.stock == new_product.stock && 
+        Some(product.price) == Some(new_product.price) && 
+        Some(product.description) == Some(new_product.description)
+        
     }
 }
