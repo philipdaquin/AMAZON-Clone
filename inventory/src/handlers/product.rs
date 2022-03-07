@@ -23,7 +23,7 @@ pub async fn create_newproduct(
 pub async fn get_info(id: web::Path<i32>, db: web::Data<DbPool>) -> Result<HttpResponse, HttpResponse> { 
     let db_pool = db_handler(db)?; 
     
-    ProductList::get_product_info(&id, &db_pool)
+    Product::get_product_info(&id, &db_pool)
         .map(|product| HttpResponse::Ok().json(product))
         .map_err(|err| HttpResponse::InternalServerError().json(err.to_string()))
 } 
