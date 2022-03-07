@@ -2,12 +2,19 @@ use actix_web::{HttpRequest, HttpResponse, web, post};
 use crate::models::product::{ProductList, NewProduct, Product};
 use crate::db::{DbPool, DbPooledConnection};
 
+#[derive(Deserialize)]
+pub struct ProductQuery { 
+    pub text: String
+}
 
-
-pub async fn index(req: HttpRequest, db: web::Data<DbPool>) -> Result<HttpResponse, HttpResponse> { 
+pub async fn index(
+    req: HttpRequest, 
+    db: web::Data<DbPool>,
+    query: web::Query<ProductQuery>
+) -> Result<HttpResponse, HttpResponse> { 
     let db_pool = db_handler(db)?; 
     Ok(HttpResponse::Ok()
-    .json(ProductList::list_products(&db_pool)))
+        .json(ProductList::list_products(&db_pool, &query.text)))
 }
 pub async fn create_newproduct(
     new_product: web::Json<NewProduct>, 
