@@ -4,6 +4,8 @@ extern crate diesel;
 #[macro_use]
 extern crate serde;
 
+extern crate diesel_full_text_search;
+
 pub mod server;
 pub mod db;
 pub mod models;

@@ -8,14 +8,17 @@ pub struct Product {
     pub title: String, 
     pub stock: f64,
     pub rating: Option<f64>, 
-    pub price: Option<i32>
+    pub price: Option<i32>,
+    pub description: Option<String>
 }
 #[derive(Insertable, Deserialize, AsChangeset)]
 #[table_name="products"]
 pub struct NewProduct { 
     pub title: String,
     pub stock: f64,
-    pub price: Option<i32>
+    pub price: Option<i32>,
+    pub description: Option<String>
+
 }
 
 #[derive(Serialize, Deserialize)]

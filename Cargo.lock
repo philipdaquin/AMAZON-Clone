@@ -1529,6 +1529,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "diesel_full_text_search"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7ad3168d9d2008c58b8c9fabb79ddc38d1f9d511fa15e0dcbd6b987912b05783"
+dependencies = [
+ "diesel",
+]
+
+[[package]]
 name = "digest"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2458,6 +2467,7 @@ dependencies = [
  "actix-web-lab",
  "async-stripe",
  "diesel",
+ "diesel_full_text_search",
  "dotenv",
  "env_logger",
  "failure",
