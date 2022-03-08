@@ -1578,9 +1578,8 @@ dependencies = [
 
 [[package]]
 name = "diesel_full_text_search"
-version = "1.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7ad3168d9d2008c58b8c9fabb79ddc38d1f9d511fa15e0dcbd6b987912b05783"
+version = "1.2.1"
+source = "git+https://github.com/werner/diesel_full_text_search#afd9051656995816fe22c448dd632c8ea0a3cf86"
 dependencies = [
  "diesel",
 ]

@@ -1,4 +1,6 @@
 table! {
+    use diesel_full_text_search::TsVector;
+    use diesel::sql_types::*;
     products (id) {
         id -> Int4,
         title -> Varchar,
@@ -6,6 +8,6 @@ table! {
         rating -> Nullable<Float8>,
         price -> Nullable<Int4>,
         description -> Nullable<Varchar>,
-        text_searchable_product_col -> Tsvector,
+        text_searchable_product_col -> TsVector,
     }
 }
