@@ -34,11 +34,12 @@ pub struct Product {
     pub price: Option<i32>,
     pub description: Option<String>
 }
-#[derive(Insertable, Deserialize, AsChangeset, Debug, Clone, PartialEq)]
+#[derive(Insertable, Deserialize, 
+    Serialize, AsChangeset, Debug, Clone, PartialEq)]
 #[table_name="products"]
 pub struct NewProduct { 
-    pub title: String,
-    pub stock: f64,
+    pub title: Option<String>,
+    pub stock: Option<f64>,
     pub price: Option<i32>,
     pub description: Option<String>
 }
@@ -62,20 +63,25 @@ impl ProductList  {
             .execute(conn)?;
         Ok(())
     }
-    pub fn list_products(conn: &PgConnection, search_input: &str) -> Self { 
+    pub fn list_products(conn: &PgConnection, rank: f64, search_input: &str) -> Self { 
         use crate::schema::{products::dsl::*, self};
-        use diesel::pg::Pg;
-        use diesel_full_text_search::{plainto_tsquery, TsVectorExtensions};
+        use diesel::{pg::Pg, ExpressionMethods, RunQueryDsl, QueryDsl};
+        use diesel_full_text_search::{plainto_tsquery, TsVectorExtensions, TsRumExtensions};
 
         let mut query = schema::products::table.into_boxed::<Pg>();
         if !search_input.is_empty() {
-            query = query.filter(
-                text_searchable_product_col.matches(plainto_tsquery(search_input))
-            )
-        } 
+            query = query
+                .filter(text_searchable_product_col.matches(plainto_tsquery(search_input)))
+                .order((product_rank.desc(), 
+                text_searchable_product_col.distance(plainto_tsquery(search_input))
+            ));
+        } else { 
+            query = query.order(product_rank.desc());
+        }
         
-        let res = products
+        let res = query
             .select(PRODUCT_COLUMNS)
+            .filter(product_rank.le(rank))
             .limit(10)
             .load::<Product>(conn)
             .expect("Error loading Products");
@@ -106,10 +112,10 @@ impl PartialEq<Product> for NewProduct {
         let new_product = self.clone();
         let product = other.clone();
 
-        product.title == new_product.title && 
-        product.stock == new_product.stock && 
-        Some(product.price) == Some(new_product.price) && 
-        Some(product.description) == Some(new_product.description)
+        new_product.title == Some(product.title) &&
+        new_product.stock == Some(product.stock) &&
+        new_product.price == product.price &&
+        new_product.description == product.description
         
     }
 }

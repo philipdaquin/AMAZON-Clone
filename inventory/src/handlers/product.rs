@@ -7,14 +7,20 @@ pub struct ProductQuery {
     pub text: String
 }
 
+#[derive(Deserialize)]
+pub struct ProductPagination { 
+    pub rank: f64
+}
+
 pub async fn index(
     req: HttpRequest, 
     db: web::Data<DbPool>,
-    query: web::Query<ProductQuery>
+    query: web::Query<ProductQuery>,
+    pagination: web::Query<ProductPagination>
 ) -> Result<HttpResponse, HttpResponse> { 
     let db_pool = db_handler(db)?; 
     Ok(HttpResponse::Ok()
-        .json(ProductList::list_products(&db_pool, &query.text)))
+        .json(ProductList::list_products(&db_pool, pagination.rank, &query.text)))
 }
 pub async fn create_newproduct(
     new_product: web::Json<NewProduct>, 
