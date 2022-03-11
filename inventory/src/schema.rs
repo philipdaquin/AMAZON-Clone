@@ -8,6 +8,7 @@ table! {
         description -> Nullable<Varchar>,
         text_searchable_product_col -> Tsvector,
         product_rank -> Nullable<Numeric>,
+        user_id -> Int4,
     }
 }
 
