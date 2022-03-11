@@ -20,7 +20,16 @@ table! {
     }
 }
 
+table! {
+    users_table (id) {
+        id -> Int4,
+    }
+}
+
+joinable!(products -> users_table (user_id));
+
 allow_tables_to_appear_in_same_query!(
     products,
     users,
+    users_table,
 );

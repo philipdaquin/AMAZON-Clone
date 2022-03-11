@@ -12,7 +12,8 @@ const PRODUCT_COLUMNS: ProductColumns = (
     products::stock,
     products::rating,
     products::price,
-    products::description
+    products::description,
+    products::user_id
 );
 
 type ProductColumns = (
@@ -22,6 +23,7 @@ type ProductColumns = (
     products::rating,
     products::price,
     products::description,
+    products::user_id
 );
 
 #[derive(Queryable, Serialize, 
@@ -32,7 +34,8 @@ pub struct Product {
     pub stock: f64,
     pub rating: Option<f64>, 
     pub price: Option<i32>,
-    pub description: Option<String>
+    pub description: Option<String>,
+    pub user_id: i32,
 }
 #[derive(Insertable, Deserialize, 
     Serialize, AsChangeset, Debug, Clone, PartialEq)]
@@ -81,7 +84,7 @@ impl ProductList  {
         
         let res = query
             .select(PRODUCT_COLUMNS)
-            .filter(product_rank.le(rank))
+            // .filter(product_rank.le(rank))
             .limit(10)
             .load::<Product>(conn)
             .expect("Error loading Products");

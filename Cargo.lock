@@ -992,6 +992,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "bigdecimal"
+version = "0.0.14"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "679e21a6734fdfc63378aea80c2bf31e6ac8ced21ed33e1ee37f8f7bf33c2056"
+dependencies = [
+ "num-bigint 0.2.6",
+ "num-integer",
+ "num-traits",
+]
+
+[[package]]
+name = "bigdecimal"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1374191e2dd25f9ae02e3aa95041ed5d747fc77b3c102b49fe2dd9a8117a6244"
+dependencies = [
+ "num-bigint 0.2.6",
+ "num-integer",
+ "num-traits",
+]
+
+[[package]]
 name = "biscuit"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1555,10 +1577,14 @@ version = "1.4.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b28135ecf6b7d446b43e27e225622a038cc4e2930a1022f51cdb97ada19b8e4d"
 dependencies = [
+ "bigdecimal 0.1.2",
  "bitflags",
  "byteorder",
  "chrono",
  "diesel_derives",
+ "num-bigint 0.2.6",
+ "num-integer",
+ "num-traits",
  "pq-sys",
  "r2d2",
  "uuid 0.6.5",
@@ -2545,6 +2571,7 @@ dependencies = [
  "actix-web 3.3.3",
  "actix-web-lab",
  "async-stripe",
+ "bigdecimal 0.0.14",
  "diesel",
  "diesel_full_text_search",
  "dotenv",
