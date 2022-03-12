@@ -8,8 +8,6 @@ async fn main() -> Result<(), Error> {
         .ok()
         .and_then(|port| port.parse::<u32>().ok())
         .unwrap_or(3000);
-
-
     new_server(port)
         .await
         .map_err(Into::into)

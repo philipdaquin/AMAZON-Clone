@@ -3,8 +3,11 @@ extern crate dotenv;
 extern crate diesel;
 #[macro_use]
 extern crate serde;
-
+#[macro_use]
 extern crate diesel_full_text_search;
+
+
+
 
 pub mod server;
 pub mod db;
@@ -12,5 +15,4 @@ pub mod models;
 pub mod schema;
 pub mod handlers;
 pub mod types;
-
 
