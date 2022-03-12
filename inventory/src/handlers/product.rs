@@ -1,6 +1,8 @@
 use actix_web::{HttpRequest, HttpResponse, web, post};
 use crate::models::product::{ProductList, NewProduct, Product};
 use crate::db::{DbPool, DbPooledConnection};
+use crate::types::*;
+use crate::authentication::logged_user::LoggedUser;
 
 #[derive(Deserialize)]
 pub struct ProductQuery { 
@@ -33,10 +35,10 @@ pub async fn create_newproduct(
         .map(|product| HttpResponse::Ok().json(product))
         .map_err(|e| HttpResponse::InternalServerError().json(e.to_string()))
 } 
-pub async fn get_info(id: web::Path<i32>, db: web::Data<DbPool>) -> Result<HttpResponse, HttpResponse> { 
+pub async fn get_info(product_id: web::Path<i32>, db: web::Data<DbPool>, user: LoggedUser) -> Result<HttpResponse, HttpResponse> { 
     let db_pool = db_handler(db)?; 
     
-    Product::get_product_info(&id, &db_pool)
+    Product::get_product_info(&product_id, user.id, &db_pool)
         .map(|product| HttpResponse::Ok().json(product))
         .map_err(|err| HttpResponse::InternalServerError().json(err.to_string()))
 } 

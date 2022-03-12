@@ -2,7 +2,7 @@ use crate::schema::products;
 use diesel::{result::Error as DbError, PgConnection};
 use diesel::{RunQueryDsl, QueryDsl};
 use crate::types::{PRODUCT_COLUMNS, ProductColumns};
-
+use crate::models::prices::PriceInfo;
 
 
 #[derive(Queryable, Serialize, 
@@ -60,6 +60,8 @@ impl ProductList  {
         } else { 
             query = query.order(product_rank.desc());
         }
+
+
         
         let res = query
             .select(PRODUCT_COLUMNS)
@@ -73,9 +75,22 @@ impl ProductList  {
 }
 
 impl Product { 
-    pub fn get_product_info(id: &i32, conn: &PgConnection) -> Result<Product, DbError> { 
-        use crate::schema::products;
-        products::table.find(id).select(PRODUCT_COLUMNS).first(conn)
+    pub fn get_product_info(
+        product_id: &i32, 
+        user_id_: i32,
+        conn: &PgConnection
+    ) -> Result<(Product, Vec<PriceInfo>), DbError> { 
+        use crate::schema::{products::*, self};
+        use diesel::{RunQueryDsl, BelongingToDsl, QueryDsl, ExpressionMethods};
+        
+        let product: Product = schema::products::table
+            .select(PRODUCT_COLUMNS)
+            .filter(user_id.eq(user_id_))
+            .find(product_id)
+            .first(conn)?;
+
+        let product_prices = PriceInfo::belonging_to(&product).load::<PriceInfo>(conn)?;
+        Ok((product, product_prices))
     }
 }
 

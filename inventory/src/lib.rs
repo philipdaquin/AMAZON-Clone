@@ -6,6 +6,7 @@ extern crate serde;
 #[macro_use]
 extern crate diesel_full_text_search;
 
+extern crate authentication;
 
 
 

@@ -2571,6 +2571,7 @@ dependencies = [
  "actix-web 3.3.3",
  "actix-web-lab",
  "async-stripe",
+ "authentication",
  "bigdecimal 0.0.14",
  "diesel",
  "diesel_full_text_search",
