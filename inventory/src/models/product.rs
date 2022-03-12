@@ -11,7 +11,7 @@ const PRODUCT_COLUMNS: ProductColumns = (
     products::title,
     products::stock,
     products::rating,
-    products::price,
+    products::cost,
     products::description,
     products::user_id
 );
@@ -21,7 +21,7 @@ type ProductColumns = (
     products::title,
     products::stock,
     products::rating,
-    products::price,
+    products::cost,
     products::description,
     products::user_id
 );
@@ -43,7 +43,7 @@ pub struct Product {
 pub struct NewProduct { 
     pub title: Option<String>,
     pub stock: Option<f64>,
-    pub price: Option<i32>,
+    pub cost: Option<i32>,
     pub description: Option<String>
 }
 #[derive(Serialize, Deserialize)]
@@ -117,7 +117,7 @@ impl PartialEq<Product> for NewProduct {
 
         new_product.title == Some(product.title) &&
         new_product.stock == Some(product.stock) &&
-        new_product.price == product.price &&
+        new_product.cost == product.price &&
         new_product.description == product.description
         
     }
