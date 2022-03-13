@@ -13,23 +13,23 @@ pub async fn new_server(port: u32) -> std::io::Result<()> {
         App::new()
             .data(establish_connection(DatabaseKind::ProductDb))
             //  Allowed Methods
-            .wrap(
-                Cors::default()
+            .wrap(Cors::default()
                 .allowed_origin("http://localhost:8080")
                 .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"])
                 .allowed_headers(vec![header::AUTHORIZATION, header::CONTENT_TYPE, header::ACCEPT])
                 .max_age(3600),
             )
+            
             //  Everything under /product/
-            .service(
-                web::resource("/product")
+            .service(web::resource("/product")
                 //  Returns a list of all products 
                 .route(web::get().to(index))
                 //  Creates a new product and returns its id    
                 .route(web::post().to(create_newproduct))
             )
-            .service(
-                web::resource("/product/{id}")
+            
+            //  ProductId {}
+            .service(web::resource("/product/{id}")
                 //  Returns information about the product with id
                 .route(web::get().to(get_info))
                 //  Marks the product with id as delete
@@ -37,13 +37,24 @@ pub async fn new_server(port: u32) -> std::io::Result<()> {
                 //  Updates information about the product with id
                 .route(web::put().to(update_product))
             )
-            .service(
-                web::scope("/payment")
+            
+            //  Payment Services
+            .service(web::scope("/payment")
                 .service(web::resource("/create")
                     .route(web::post().to(handle_stripe))
                 )
-                
             )
+            
+            //  GraphQl
+            .service(web::resource("/graphql")
+                .route(web::get().to(graphql))
+                .route(web::post().to(graphql)),
+            )
+            .service(web::resource("/playground")
+                .route(web::get().to(playground))
+            )
+
+
     })
     .bind(format!("127.0.0.1:{}", port))?
     .run()
