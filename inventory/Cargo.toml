@@ -24,3 +24,8 @@ diesel_full_text_search = { version = "1.2.1", git = "https://github.com/werner/
 elasticsearch = "7.14.0-alpha.1"
 itertools = "0.10.3"
 authentication = {path = "../authentication"}
+
+
+
+# async-graphql = "3.0.34"
+# async-graphql-actix-web = "3.0.34"

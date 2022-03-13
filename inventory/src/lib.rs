@@ -7,7 +7,8 @@ extern crate serde;
 extern crate diesel_full_text_search;
 
 extern crate authentication;
-
+// extern crate async_graphql;
+extern crate juniper;
 
 
 pub mod server;
@@ -16,4 +17,4 @@ pub mod models;
 pub mod schema;
 pub mod handlers;
 pub mod types;
-
+pub mod graphql;

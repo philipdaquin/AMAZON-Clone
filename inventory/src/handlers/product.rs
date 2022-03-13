@@ -35,10 +35,10 @@ pub async fn create_newproduct(
         .map(|product| HttpResponse::Ok().json(product))
         .map_err(|e| HttpResponse::InternalServerError().json(e.to_string()))
 } 
-pub async fn get_info(product_id: web::Path<i32>, db: web::Data<DbPool>, user: LoggedUser) -> Result<HttpResponse, HttpResponse> { 
+pub async fn get_info(product_id: web::Path<i32>, db: web::Data<DbPool>, ) -> Result<HttpResponse, HttpResponse> { 
     let db_pool = db_handler(db)?; 
-    
-    Product::get_product_info(&product_id, user.id, &db_pool)
+    let user_id = 11111;
+    Product::get_product_info(&product_id, user_id, &db_pool)
         .map(|product| HttpResponse::Ok().json(product))
         .map_err(|err| HttpResponse::InternalServerError().json(err.to_string()))
 } 

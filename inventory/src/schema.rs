@@ -36,6 +36,28 @@ table! {
 }
 
 table! {
+    sale_products (id) {
+        id -> Int4,
+        product_id -> Int4,
+        sale_id -> Int4,
+        amount -> Float8,
+        discount -> Int4,
+        tax -> Int4,
+        price -> Int4,
+        total -> Float8,
+    }
+}
+
+table! {
+    sales (id) {
+        id -> Int4,
+        user_id -> Int4,
+        sale_date -> Date,
+        total -> Float8,
+    }
+}
+
+table! {
     users (email) {
         email -> Varchar,
         password -> Varchar,
@@ -54,11 +76,16 @@ joinable!(prices_products -> prices (price_id));
 joinable!(prices_products -> products (product_id));
 joinable!(prices_products -> users_table (user_id));
 joinable!(products -> users_table (user_id));
+joinable!(sale_products -> products (product_id));
+joinable!(sale_products -> sales (sale_id));
+joinable!(sales -> users_table (user_id));
 
 allow_tables_to_appear_in_same_query!(
     prices,
     prices_products,
     products,
+    sale_products,
+    sales,
     users,
     users_table,
 );
