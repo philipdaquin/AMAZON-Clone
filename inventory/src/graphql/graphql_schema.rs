@@ -47,11 +47,9 @@ impl MutationRoot {
 }
 
 pub type SchemaGraphQL = RootNode<'static, QueryRoot, MutationRoot, EmptySubscription<Context>>;
-
 pub fn create_schema() -> SchemaGraphQL {
     SchemaGraphQL::new(QueryRoot {}, MutationRoot {}, EmptySubscription::new())
 }
-
 pub fn create_context(user_id: i32, db_pool: Arc<DbPool>) -> Context {
     Context { 
         user_id, 

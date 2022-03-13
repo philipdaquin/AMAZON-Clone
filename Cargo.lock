@@ -2573,6 +2573,7 @@ dependencies = [
  "async-stripe",
  "authentication",
  "bigdecimal 0.0.14",
+ "chrono",
  "diesel",
  "diesel_full_text_search",
  "dotenv",

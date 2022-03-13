@@ -24,6 +24,7 @@ diesel_full_text_search = { version = "1.2.1", git = "https://github.com/werner/
 elasticsearch = "7.14.0-alpha.1"
 itertools = "0.10.3"
 authentication = {path = "../authentication"}
+chrono = "0.4.19"
 
 
 
