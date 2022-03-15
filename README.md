@@ -4,7 +4,6 @@ Left To Do:
 -  TEST Stripe Payment Service + User Order History 
 -  Deploy to AWS and Use Terraform 
 -  Elastic Search
--  Refactor REST APIs to GraphQL, ensuring to document this stage
 ## High-Level Design: Main Components
 - Inventory
 - Delivery/Notification Service
