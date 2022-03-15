@@ -19,7 +19,7 @@ pub struct Sales {
     pub bill_number: Option<String>
 }
 
-pub struct NewSales { 
+pub struct NewSale { 
     pub id: Option<i32>, 
     pub user_id: Option<i32>,
     pub sale_date: Option<NaiveTime>,
@@ -33,7 +33,7 @@ pub struct FullSale {
 }
 
 pub struct FullNewSales { 
-    pub sale: NewSales,
+    pub sale: NewSale,
     pub sales_products: Vec<FullNewSaleProduct>
 }
 
