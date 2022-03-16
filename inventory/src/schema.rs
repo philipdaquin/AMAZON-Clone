@@ -54,6 +54,7 @@ table! {
         user_id -> Int4,
         sale_date -> Date,
         total -> Float8,
+        bill_number -> Nullable<Varchar>,
     }
 }
 
