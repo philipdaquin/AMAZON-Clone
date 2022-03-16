@@ -24,7 +24,8 @@ use std::sync::Arc;
 use juniper::{graphql_object, RootNode};
 use juniper::{EmptySubscription, FieldResult};
 use crate::db::DbPool;
-
+use crate::models::sales::{NewSale, ListSale};
+use crate::models::product_sales::{};
 #[derive(Clone)]
 pub struct Context {
     pub user_id: i32,
@@ -36,7 +37,8 @@ pub struct QueryRoot;
 
 #[graphql_object(context = Context)]
 impl QueryRoot {
-    
+   
+
 }
 
 pub struct MutationRoot;

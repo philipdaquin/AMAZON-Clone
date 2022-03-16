@@ -25,6 +25,12 @@ elasticsearch = "7.14.0-alpha.1"
 itertools = "0.10.3"
 authentication = {path = "../authentication"}
 chrono = "0.4.19"
+thiserror = "1.0.30"
+actix = "0.13.0"
+r2d2 = "0.8.9"
+derive_more = "0.99.17"
+uuid = "0.8.2"
+actix-threadpool = "0.3.3"
 
 
 

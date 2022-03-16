@@ -43,6 +43,25 @@ pub type PriceProduct = (
 );
 
 
+pub const SALESCOLUMN: SalesColumn = (
+    sales::dsl::id,
+    sales::dsl::user_id,
+    sales::dsl::sale_date,
+    sales::dsl::total,
+    sales::dsl::bill_number
+);
+
+
+pub type SalesColumn = (
+    sales::dsl::id,
+    sales::dsl::user_id,
+    sales::dsl::sale_date,
+    sales::dsl::total,
+    sales::dsl::bill_number
+);
+
+
+
 pub const SALEPRODUCTS: SaleProducts = (
     sale_products::id,
     sale_products::product_id,
