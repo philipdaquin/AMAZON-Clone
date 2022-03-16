@@ -60,8 +60,6 @@ pub type SalesColumn = (
     sales::dsl::bill_number
 );
 
-
-
 pub const SALEPRODUCTS: SaleProducts = (
     sale_products::id,
     sale_products::product_id,

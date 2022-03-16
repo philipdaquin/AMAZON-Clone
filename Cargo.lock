@@ -9,10 +9,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1be241f88f3b1e7e9a3fbe3b5a8a0f6915b5a1d7ee0d9a248d3376d01068cc60"
 dependencies = [
  "actix-rt 1.1.1",
- "actix_derive",
+ "actix_derive 0.5.0",
  "bitflags",
  "bytes 0.5.6",
- "crossbeam-channel",
+ "crossbeam-channel 0.4.4",
  "derive_more",
  "futures-channel",
  "futures-util",
@@ -25,6 +25,30 @@ dependencies = [
  "tokio-util 0.3.1",
  "trust-dns-proto",
  "trust-dns-resolver",
+]
+
+[[package]]
+name = "actix"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f728064aca1c318585bf4bb04ffcfac9e75e508ab4e8b1bd9ba5dfe04e2cbed5"
+dependencies = [
+ "actix-rt 2.6.0",
+ "actix_derive 0.6.0",
+ "bitflags",
+ "bytes 1.1.0",
+ "crossbeam-channel 0.5.3",
+ "futures-core",
+ "futures-sink",
+ "futures-task",
+ "futures-util",
+ "log",
+ "once_cell",
+ "parking_lot 0.12.0",
+ "pin-project-lite 0.2.8",
+ "smallvec",
+ "tokio 1.17.0",
+ "tokio-util 0.7.0",
 ]
 
 [[package]]
@@ -511,7 +535,7 @@ version = "3.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7f6edf3c2693e2a8c422800c87ee89a6a4eac7dd01109bc172a1093ce1f4f001"
 dependencies = [
- "actix",
+ "actix 0.10.0",
  "actix-codec 0.3.0",
  "actix-http 2.2.2",
  "actix-web 3.3.3",
@@ -570,6 +594,17 @@ name = "actix_derive"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b95aceadaf327f18f0df5962fedc1bde2f870566a0b9f65c89508a3b1f79334c"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "actix_derive"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6d44b8fee1ced9671ba043476deddef739dd0959bf77030b26b738cc591737a7"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -870,7 +905,7 @@ dependencies = [
 name = "authentication"
 version = "0.1.0"
 dependencies = [
- "actix",
+ "actix 0.10.0",
  "actix-files 0.5.0",
  "actix-identity",
  "actix-rt 1.1.1",
@@ -1362,6 +1397,16 @@ checksum = "b153fe7cbef478c567df0f972e02e6d736db11affe43dfc9c56a9374d1adfb87"
 dependencies = [
  "crossbeam-utils 0.7.2",
  "maybe-uninit",
+]
+
+[[package]]
+name = "crossbeam-channel"
+version = "0.5.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fdbfe11fe19ff083c48923cf179540e8cd0535903dc35e178a1fdeeb59aef51f"
+dependencies = [
+ "cfg-if 1.0.0",
+ "crossbeam-utils 0.8.7",
 ]
 
 [[package]]
@@ -2567,13 +2612,16 @@ dependencies = [
 name = "inventory"
 version = "0.1.0"
 dependencies = [
+ "actix 0.13.0",
  "actix-cors",
+ "actix-threadpool",
  "actix-web 3.3.3",
  "actix-web-lab",
  "async-stripe",
  "authentication",
  "bigdecimal 0.0.14",
  "chrono",
+ "derive_more",
  "diesel",
  "diesel_full_text_search",
  "dotenv",
@@ -2583,9 +2631,12 @@ dependencies = [
  "itertools",
  "juniper",
  "log",
+ "r2d2",
  "serde",
  "serde_json",
+ "thiserror",
  "tokio 1.17.0",
+ "uuid 0.8.2",
 ]
 
 [[package]]
