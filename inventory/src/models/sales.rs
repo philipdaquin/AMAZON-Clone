@@ -11,7 +11,13 @@ use juniper::{FieldResult, GraphQLObject, GraphQLInputObject, graphql_object};
 use chrono::NaiveDate;
 use crate::models::product_sales::{NewProductSaleInfo, ProductForSale, ProductSaleInfo};
 use std::sync::Arc;
-use crate::graphql::graphql_schema::Context;
+use crate::graphql_schema::{
+    // price::price_resolver,
+    // products::product_resolver,
+    // sale::sale_resolver,
+    // MutationRoot, QueryRoot,
+    graphql_schema::Context
+};
 use crate::error::ServerError;
 use super::product_sales::{NewProductSale, NewSaleProducts};
 use super::product::Product;

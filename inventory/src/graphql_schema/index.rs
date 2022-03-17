@@ -10,7 +10,6 @@ use crate::models::errors::GraphQLErrors;
 
 use super::graphql_schema::{SchemaGraphQL, create_context};
 
-
 //  Get request 
 pub async fn playground() -> HttpResponse {
     let html = playground_source("/graphql", None);

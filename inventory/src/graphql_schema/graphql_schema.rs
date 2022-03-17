@@ -20,33 +20,18 @@
 // }
 
 use std::sync::Arc;
-
-use juniper::{graphql_object, RootNode};
-use juniper::{EmptySubscription, FieldResult};
+use juniper::{graphql_object, RootNode, EmptySubscription, FieldResult};
 use crate::db::DbPool;
 use crate::models::sales::{NewSale, ListSale};
 use crate::models::product_sales::{};
+use super::resolver::{MutationRoot, QueryRoot};
+
 #[derive(Clone)]
 pub struct Context {
     pub user_id: i32,
     pub db_pool: Arc<DbPool>,
 }
 impl juniper::Context for Context {}
-
-pub struct QueryRoot;
-
-#[graphql_object(context = Context)]
-impl QueryRoot {
-   
-
-}
-
-pub struct MutationRoot;
-
-#[graphql_object(context = Context)]
-impl MutationRoot {
-    
-}
 
 pub type SchemaGraphQL = RootNode<'static, QueryRoot, MutationRoot, EmptySubscription<Context>>;
 pub fn create_schema() -> SchemaGraphQL {
