@@ -8,7 +8,6 @@ use crate::models::prices::PriceInfo;
 
 use juniper::GraphQLObject;
 
-
 #[derive(Queryable, Serialize, 
     Deserialize, PartialEq, Debug, Clone, Identifiable)]
 pub struct Product { 

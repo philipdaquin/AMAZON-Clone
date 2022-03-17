@@ -3,6 +3,7 @@ use diesel::{RunQueryDsl, QueryDsl, ExpressionMethods, Connection, PgConnection}
 use diesel::{result::Error as DbError};
 use itertools::Itertools;
 use crate::models::product::Product;
+use juniper::{GraphQLInputObject, GraphQLObject};
 
 #[derive(Queryable, Debug, Clone, Identifiable, Serialize, Deserialize, PartialEq)]
 #[table_name = "prices"]
@@ -11,15 +12,27 @@ pub struct Price {
     pub name: String,
     pub user_id: i32
 }
+#[derive(Debug, Clone)]
+pub struct ListedPrice { 
+    pub data: Vec<Price>
+}
+#[derive(Debug, Clone, Serialize, Deserialize, GraphQLObject)]
+pub struct ProductPriceInfo { 
+    pub price_info: PriceInfo, 
+    pub price: Price
+}
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, AsChangeset, Insertable)]
+#[derive(Debug, Clone, Serialize, Deserialize, 
+    GraphQLInputObject, PartialEq, AsChangeset, Insertable)]
 #[table_name = "prices"]
-pub struct NewPrice { 
+pub struct NewPriceForm { 
     pub id: Option<i32>,
     pub name: Option<String>,
     pub user_id: Option<i32>
 }
-#[derive(Queryable, Debug, Clone, Associations, Identifiable, Serialize, Deserialize, PartialEq)]
+
+#[derive(Queryable, Debug, Clone, GraphQLObject, 
+    Associations, Identifiable, Serialize, Deserialize, PartialEq)]
 #[belongs_to(Price)]
 #[belongs_to(Product)]
 #[table_name="prices_products"]
@@ -30,14 +43,25 @@ pub struct PriceInfo {
     pub user_id: i32,
     pub amount: Option<i32>
 }
-
-
-#[derive(Serialize, Deserialize, Clone, Debug, Insertable, AsChangeset)]
+#[derive(Serialize, Deserialize, Clone, GraphQLInputObject,
+    Debug, Insertable, AsChangeset)]
 #[table_name = "prices_products"]
-pub struct NewPriceInfo { 
+pub struct FormPriceInfo { 
     pub id: Option<i32>, 
     pub price_id: i32,
     pub product_id: Option<i32>,
     pub user_id: Option<i32>,
     pub amount: Option<i32>
+}
+
+
+#[derive(Debug, Clone, GraphQLObject)]
+pub struct ProductPriceInfoUpdate { 
+    pub updated_price_info: FormPriceInfo,
+    to_delete: bool 
+}
+
+#[derive(Debug, Clone)]
+pub struct NewProductPriceToUpdate { 
+    pub data: ProductPriceInfoUpdate
 }
