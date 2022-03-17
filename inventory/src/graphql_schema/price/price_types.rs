@@ -4,6 +4,8 @@ use diesel::{result::Error as DbError};
 use itertools::Itertools;
 use crate::models::product::Product;
 use juniper::{GraphQLInputObject, GraphQLObject};
+use serde::{Deserialize, Serialize};
+
 
 #[derive(Queryable, Debug, Clone, Identifiable, Serialize, Deserialize, PartialEq)]
 #[table_name = "prices"]
@@ -12,7 +14,7 @@ pub struct Price {
     pub name: String,
     pub user_id: i32
 }
-#[derive(Debug, Clone)]
+#[derive(Deserialize, Serialize, GraphQLObject, Clone)]
 pub struct ListedPrice { 
     pub data: Vec<Price>
 }
@@ -53,15 +55,13 @@ pub struct FormPriceInfo {
     pub user_id: Option<i32>,
     pub amount: Option<i32>
 }
-
-
-#[derive(Debug, Clone, GraphQLObject)]
+#[derive(Debug, Clone, Serialize, Deserialize, GraphQLInputObject)]
 pub struct ProductPriceInfoUpdate { 
     pub updated_price_info: FormPriceInfo,
-    to_delete: bool 
+    pub to_delete: bool 
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, GraphQLInputObject)]
 pub struct NewProductPriceToUpdate { 
     pub data: ProductPriceInfoUpdate
 }

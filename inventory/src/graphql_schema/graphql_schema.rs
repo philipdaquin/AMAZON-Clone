@@ -26,6 +26,10 @@ use crate::models::sales::{NewSale, ListSale};
 use crate::models::product_sales::{};
 use super::resolver::{MutationRoot, QueryRoot};
 
+
+//  Context, an object shared by all the resolvers of a specific execution.
+//  This gives us important contextual information like the currenly logged in user
+//  or access to database 
 #[derive(Clone)]
 pub struct Context {
     pub user_id: i32,
