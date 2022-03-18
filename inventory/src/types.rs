@@ -6,6 +6,18 @@ use crate::schema::sales;
 //  We need to tell diesel we need only a few fields from the table,
 // That's why we're going to need a constant that will tell Rust to bring all columns, 
 // except TsVector, then we need a new modifications in the code to insert the filter required 
+
+pub const PRICES: PricesType = (
+    prices::id,
+    prices::name, 
+    prices::user_id
+);
+pub type PricesType = (
+    prices::id,
+    prices::name, 
+    prices::user_id
+);
+
 pub const PRODUCT_COLUMNS: ProductColumns = (
     products::id,
     products::title,

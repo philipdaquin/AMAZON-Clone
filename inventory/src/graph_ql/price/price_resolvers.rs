@@ -4,7 +4,7 @@ use itertools::Itertools;
 use juniper::FieldResult;
 use crate::graph_ql::index::Context;
 use crate::types::PRICE_PRODUCT;
-
+use crate::types::PRICES;
 use super::price_types::{
     Price, ListedPrice, ProductPriceInfo, NewPriceForm,
     PriceInfo, FormPriceInfo, ProductPriceInfoUpdate, 
@@ -68,9 +68,10 @@ impl ProductPriceInfoUpdate {
 }
 //  Resolvers is a collection of functions that generate response for a GraphQL query. 
 //  It acts as a GraphQL Query Handler 
+use crate::schema::prices::dsl::{*, user_id};
+use crate::schema::prices::table;
 impl Price { 
-    pub fn prices(ctx: &Context) -> FieldResult<ListedPrice> {
-        use crate::schema::prices::dsl::{*, user_id};
+    pub fn list_prices(ctx: &Context) -> FieldResult<ListedPrice> {
         let conn: &PgConnection = &ctx.db_pool;
         let listed_price = ListedPrice { 
             //  Load the prices for the current user in context
@@ -80,10 +81,51 @@ impl Price {
         Ok(listed_price)
     }
     pub fn find_price(ctx: &Context, price_id: i32) -> FieldResult<Price> {
+        let conn: &PgConnection = &ctx.db_pool;
+        let price = prices
+            .filter(user_id.eq(ctx.user_id))
+            .find(price_id)
+            .first(conn)?;
+        Ok(price)
+    }
+
+    pub fn create_price(ctx: &Context, new_price: NewPriceForm) -> FieldResult<Price> {
+        let conn: &PgConnection = &ctx.db_pool;
+        let new_price = NewPriceForm { 
+            user_id: Some(ctx.user_id),
+            ..new_price
+        };
+        let price = diesel::insert_into(table)
+            .values(new_price)
+            .returning(PRICES)
+            .on_conflict_do_nothing()
+            .get_result::<Price>(conn)?;
+        Ok(price)
+    }
+    pub fn update_price(ctx: &Context, price: NewPriceForm) -> FieldResult<Price> {
+        let conn: &PgConnection = &ctx.db_pool;
+        //  Check if the price_id exists in the database 
+        let price_id = price.id.ok_or(DbError::QueryBuilderError("Missing Price Id".into()));
+        let new_price = NewPriceForm {
+            user_id: Some(ctx.user_id),
+            ..price
+        };
+        let updated_price = diesel::update(prices
+            //  Filter table owned by user
+            //  Find the row associated to the Primary_Key
+            .filter(user_id.eq(ctx.user_id))
+            .find(price_id).set(new_price))
+            //  Update Value
+            .get_result::<Price>(conn)?;
+        Ok(updated_price)
 
     }
-    pub fn create_price() {}
-    pub fn update_price() {}
-    pub fn destroy_price() {}
+    pub fn destroy_price(ctx: &Context, price_id: i32) -> FieldResult<bool> {
+        let conn: &PgConnection = &ctx.db_pool;
+        diesel::delete(prices.filter(user_id.eq(ctx.user_id))
+            .find(price_id))
+            .execute(conn)?;
+        Ok(true)
+    }
 
 }
