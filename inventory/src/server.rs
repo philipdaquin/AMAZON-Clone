@@ -4,7 +4,7 @@ use crate::handlers::{product::{self,
 use actix_web::{web, App, HttpRequest, HttpServer, Responder, http::header};
 use actix_cors::Cors;
 use crate::db::{establish_connection, DatabaseKind};
-use crate::graph_ql::index::{graphql, playground};
+use crate::graphql_modules::index::{graphql, playground};
 
 pub async fn new_server(port: u32) -> std::io::Result<()> {
     

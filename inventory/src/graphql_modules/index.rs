@@ -26,7 +26,6 @@ pub fn create_context(user_id: i32, db_pool: Arc<DbPool>) -> Context {
         db_pool 
     }
 }
-
 //  Get request 
 pub async fn playground() -> HttpResponse {
     let html = playground_source("/graphql", None);

@@ -2,7 +2,7 @@ use diesel::{RunQueryDsl, QueryDsl, ExpressionMethods, Connection, PgConnection}
 use diesel::{result::Error as DbError};
 use itertools::Itertools;
 use juniper::FieldResult;
-use crate::graph_ql::index::Context;
+use crate::graphql_modules::index::Context;
 use crate::types::PRICE_PRODUCT;
 use crate::types::PRICES;
 use super::price_types::{
