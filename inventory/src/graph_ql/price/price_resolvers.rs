@@ -58,7 +58,12 @@ impl ProductPriceInfoUpdate {
             let mut full_price_info = Vec::new();
 
             price_product_info.iter().for_each(|info| { 
-                todo!()
+                let prices = Price::find_price(&ctx, info.price_id)
+                    .map_err(|_| DbError::NotFound)?;
+                full_price_info.push(ProductPriceInfo { 
+                    price_info: info,
+                    price: prices 
+                })
             });
 
             Ok(full_price_info)
