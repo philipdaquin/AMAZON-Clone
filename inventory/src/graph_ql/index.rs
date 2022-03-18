@@ -4,7 +4,7 @@ use actix_web::{web, Error, HttpRequest, HttpResponse};
 use juniper::http::{playground::playground_source, GraphQLRequest};
 use crate::db::DbPool;
 use juniper::{graphql_object, RootNode, EmptySubscription, FieldResult};
-use super::resolver::{MutationRoot, QueryRoot};
+use super::graphql_schema::{MutationRoot, QueryRoot};
 
 //  Context, an object shared by all the resolvers of a specific execution.
 //  This gives us important contextual information like the currenly logged in user
@@ -15,6 +15,7 @@ pub struct Context {
     pub db_pool: Arc<DbPool>,
 }
 impl juniper::Context for Context {}
+
 pub type SchemaGraphQL = RootNode<'static, QueryRoot, MutationRoot, EmptySubscription<Context>>;
 pub fn create_schema() -> SchemaGraphQL {
     SchemaGraphQL::new(QueryRoot {}, MutationRoot {}, EmptySubscription::new())
