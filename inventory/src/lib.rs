@@ -18,5 +18,5 @@ pub mod models;
 pub mod schema;
 pub mod handlers;
 pub mod types;
-pub mod graphql_schema;
+pub mod graph_ql;
 pub mod error;

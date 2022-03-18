@@ -3,7 +3,7 @@ use diesel::{RunQueryDsl, QueryDsl, ExpressionMethods, Connection, PgConnection}
 use diesel::{result::Error as DbError};
 use itertools::Itertools;
 
-use crate::graphql_schema::graphql_schema::Context;
+use crate::graphql_::graphql_schema::Context;
 use super::price_types::{
     Price, ListedPrice, ProductPriceInfo, NewPriceForm,
     PriceInfo, FormPriceInfo, ProductPriceInfoUpdate, 

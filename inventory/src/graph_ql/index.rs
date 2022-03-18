@@ -1,14 +1,30 @@
 use std::sync::Arc;
 use crate::authentication::logged_user::LoggedUser;
-use actix_web::http::header::HeaderMap;
-use actix_web::http::Method;
 use actix_web::{web, Error, HttpRequest, HttpResponse};
 use juniper::http::{playground::playground_source, GraphQLRequest};
-use juniper::serde::ser::Error as SerdeError;
 use crate::db::DbPool;
-use crate::models::errors::GraphQLErrors;
+use juniper::{graphql_object, RootNode, EmptySubscription, FieldResult};
+use super::resolver::{MutationRoot, QueryRoot};
 
-use super::graphql_schema::{SchemaGraphQL, create_context};
+//  Context, an object shared by all the resolvers of a specific execution.
+//  This gives us important contextual information like the currenly logged in user
+//  or access to database 
+#[derive(Clone)]
+pub struct Context {
+    pub user_id: i32,
+    pub db_pool: Arc<DbPool>,
+}
+impl juniper::Context for Context {}
+pub type SchemaGraphQL = RootNode<'static, QueryRoot, MutationRoot, EmptySubscription<Context>>;
+pub fn create_schema() -> SchemaGraphQL {
+    SchemaGraphQL::new(QueryRoot {}, MutationRoot {}, EmptySubscription::new())
+}
+pub fn create_context(user_id: i32, db_pool: Arc<DbPool>) -> Context {
+    Context { 
+        user_id, 
+        db_pool 
+    }
+}
 
 //  Get request 
 pub async fn playground() -> HttpResponse {
