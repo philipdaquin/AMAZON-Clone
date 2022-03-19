@@ -13,8 +13,9 @@ use crate::models::product_sales::{NewProductSaleInfo, ProductForSale, ProductSa
 use std::sync::Arc;
 use crate::graphql_modules::index::Context;
 use crate::error::ServerError;
-use super::product_sales::{NewProductSale, NewSaleProducts};
-use super::product::Product;
+use super::sale_types::{NewProductSale, *, NewSaleProducts};
+use crate::graphql_modules::products::product_types::*;
+
 
 type BoxedQuery<'a> = diesel::query_builder::BoxedSelectStatement<'a, 
         (
@@ -194,7 +195,7 @@ impl Sale {
                 })
         })
     }
-    pub fn show(ctx: &Context, sale_id: i32) -> FieldResult<FullSale> { 
+    pub fn show_product(ctx: &Context, sale_id: i32) -> FieldResult<FullSale> { 
         use crate::schema::sales::{table, user_id};
 
         let conn: &PgConnection = ctx.db_pool;

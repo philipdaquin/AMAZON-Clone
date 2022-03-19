@@ -1,10 +1,11 @@
 
+use chrono::NaiveDate;
 use diesel::{Insertable, AsChangeset};
+use juniper::{GraphQLObject, GraphQLInputObject};
 use serde::Deserialize;
-
+use crate::schema::sales;
 use crate::models::product::{Product, NewProduct};
 use crate::schema::sale_products;
-use crate::models::sales::Sale;
 use super::sale_resolver::*;
 
 #[derive(Identifiable, Associations, Queryable, Debug, Clone, PartialEq)]
@@ -46,10 +47,6 @@ pub struct NewProductSaleInfo  {
 pub struct NewSaleProducts { 
     pub data: Vec<NewProductSaleInfo>
 }
-
-
-
-
 
 #[derive(Identifiable, Queryable, Debug, Clone, PartialEq, GraphQLObject)]
 #[table_name = "sales"]
