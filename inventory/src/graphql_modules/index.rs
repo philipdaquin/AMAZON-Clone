@@ -57,4 +57,3 @@ pub async fn graphql(
         .body(user))
 
 }
-

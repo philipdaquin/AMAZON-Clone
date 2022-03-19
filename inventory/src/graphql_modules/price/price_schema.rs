@@ -1,5 +1,5 @@
 use crate::graphql_modules::{MutationRoot, QueryRoot};
-use juniper::{graphql_object, FieldResult, Object, };
+use juniper::{graphql_object, FieldResult, Object};
 use crate::graphql_modules::index::Context;
 use super::price_types::*;
 

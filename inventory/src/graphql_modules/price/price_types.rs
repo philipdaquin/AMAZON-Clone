@@ -61,7 +61,6 @@ pub struct ProductPriceInfoUpdate {
     pub updated_price_info: FormPriceInfo,
     pub to_delete: bool 
 }
-
 #[derive(Debug, Clone, GraphQLInputObject)]
 pub struct NewProductPriceToUpdate { 
     pub data: ProductPriceInfoUpdate

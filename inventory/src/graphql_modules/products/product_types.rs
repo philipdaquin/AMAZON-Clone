@@ -11,7 +11,7 @@ pub struct Product {
     pub title: String, 
     pub stock: f64,
     pub rating: Option<f64>, 
-    pub price: Option<i32>,
+    pub cost: Option<i32>,
     pub description: Option<String>,
     pub user_id: i32,
 }
@@ -19,6 +19,7 @@ pub struct Product {
     Serialize, Clone, PartialEq, GraphQLInputObject)]
 #[table_name="products"]
 pub struct NewProduct { 
+    pub id: Option<i32>, 
     pub title: Option<String>,
     pub stock: Option<f64>,
     pub cost: Option<i32>,
