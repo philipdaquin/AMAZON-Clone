@@ -2633,6 +2633,7 @@ dependencies = [
  "log",
  "r2d2",
  "serde",
+ "serde_derive",
  "serde_json",
  "thiserror",
  "tokio 1.17.0",

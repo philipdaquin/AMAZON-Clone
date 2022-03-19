@@ -18,27 +18,29 @@ impl ProductPriceInfoUpdate {
     pub fn update_product(
         records: NewProductPriceToUpdate, 
         product_id: i32,
-        user_id: i32, 
         ctx: &Context
     ) -> Result<Vec<PriceInfo>, DbError> { 
         use crate::schema::prices_products;
 
-        let conn: &PgConnection = ctx.db_pool; 
+        let conn: &PgConnection = &ctx.db_pool; 
         conn.transaction(|| { 
             let mut to_keep = Vec::new();
-            for info in records { 
+            for info in records.data { 
+                
                 if info.delete && info.price_info.id.is_some() { 
+
                     diesel::delete(prices_products::table
-                        .filter(prices_products::user_id.eq(user_id))
+                        .filter(prices_products::user_id.eq(ctx.user_id))
                         .find(info.price_info.id.unwrap())
                     ).execute(conn)?;
                 } else { 
                     to_keep.push(info)
                 }
             }
+
             let price_product_info = to_keep.iter().map(|price_product_info| { 
                 let new_price_info = FormPriceInfo { 
-                    user_id: Some(user_id),
+                    user_id: Some(ctx.user_id),
                     product_id: Some(product_id),
                     ..price_product_info.clone().price_info
                 };
@@ -59,7 +61,7 @@ impl ProductPriceInfoUpdate {
 
             price_product_info.iter().for_each(|info| { 
                 let prices = Price::find_price(&ctx, info.price_id)
-                    .map_err(|_| DbError::NotFound)?;
+                    .map_err(|_| DbError::NotFound);
                 full_price_info.push(ProductPriceInfo { 
                     price_info: info,
                     price: prices 
@@ -73,7 +75,7 @@ impl ProductPriceInfoUpdate {
 }
 //  Resolvers is a collection of functions that generate response for a GraphQL query. 
 //  It acts as a GraphQL Query Handler 
-use crate::schema::prices::dsl::{*, user_id};
+use crate::schema::prices::dsl::{*};
 use crate::schema::prices::table;
 impl Price { 
     pub fn list_prices(ctx: &Context) -> FieldResult<ListedPrice> {
@@ -93,6 +95,7 @@ impl Price {
             .first(conn)?;
         Ok(price)
     }
+
 
     pub fn create_price(ctx: &Context, new_price: NewPriceForm) -> FieldResult<Price> {
         let conn: &PgConnection = &ctx.db_pool;

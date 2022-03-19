@@ -1,38 +1,53 @@
-
+use crate::schema::products::dsl::{*, user_id};
 use crate::schema::products;
-use diesel::{result::Error as DbError, PgConnection};
-use diesel::{RunQueryDsl, QueryDsl};
-use crate::types::{PRODUCT_COLUMNS, ProductColumns};
+
+use crate::schema::prices;
+use crate::schema::prices::dsl::*;
+
+
+use diesel::pg::Pg;
+use diesel::{result::Error as DbError, PgConnection, RunQueryDsl, QueryDsl, BelongingToDsl};
+use diesel_full_text_search::plainto_tsquery;
+use crate::types::{PRODUCT_COLUMNS};
 use crate::models::prices::PriceInfo;
-use super::product_types::*;
+use super::product_types::{Product, NewProduct, NewProductInfo, ListedProduct};
+use juniper::FieldResult;
+use crate::graphql_modules::index::Context;
+//  CRUD
+impl Product  { 
+    pub fn delete_product(ctx: &Context, product_id: i32 ) -> FieldResult<bool> { 
 
-
-#[derive(Serialize, Deserialize)]
-pub struct ProductList(pub Vec<Product>);
-
-impl ProductList  { 
-    pub fn delete_product(id: &i32, conn: &PgConnection) -> Result<(), DbError> { 
-        use crate::schema::products::dsl;
-        diesel::delete(dsl::products.find(&id))
+        let conn: &PgConnection = &ctx.db_pool;
+        diesel::delete(
+            products.filter(user_id.eq(ctx.user_id))
+            .find(product_id))
             .execute(conn)?;
-        Ok(())
+        Ok(true)
     }
-    pub fn update_product(id: &i32, 
-        new_product: &NewProduct,
-        conn: &PgConnection,
+
+    pub fn update_product(
+        product_id: &i32, 
+        new_product: &NewProduct, 
+        ctx: &Context 
     ) -> Result<(), DbError> { 
-        use crate::schema::products::dsl;
-        diesel::update(dsl::products.find(id))
+        let conn: &PgConnection = &ctx.db_pool;
+
+        diesel::update(
+            products.find(product_id))
             .set(new_product)
             .execute(conn)?;
         Ok(())
     }
-    pub fn list_products(conn: &PgConnection, rank: f64, search_input: &str) -> Self { 
-        use crate::schema::{products::dsl::*, self};
-        use diesel::{pg::Pg, ExpressionMethods, RunQueryDsl, QueryDsl};
-        use diesel_full_text_search::{plainto_tsquery, TsVectorExtensions, TsRumExtensions};
 
-        let mut query = schema::products::table.into_boxed::<Pg>();
+    pub fn list_products(
+        ctx: &Context, 
+        rank: f64, 
+        search_input: String, 
+        limit: i32
+    ) -> FieldResult<ListedProduct> { 
+        let conn: &PgConnection = &ctx.db_pool;
+        let mut query = products::table.into_boxed::<Pg>();
+
         if !search_input.is_empty() {
             query = query
                 .filter(text_searchable_product_col.matches(plainto_tsquery(search_input)))
@@ -42,28 +57,29 @@ impl ProductList  {
         } else { 
             query = query.order(product_rank.desc());
         }
-
-
-        
-        let res = query
+        let queried_products = query
             .select(PRODUCT_COLUMNS)
-            // .filter(product_rank.le(rank))
+            .filter(user_id.eq(ctx.user_id).and(product_rank.le(rank)))
             .limit(10)
             .load::<Product>(conn)
             .expect("Error loading Products");
+        
+        let price_info = PriceInfo::belonging_to(&queried_products) 
+            .select(PRODUCT_COLUMNS)    
+            .load::<(PriceInfo, Product)>(conn)?
+            .grouped_by(&queried_products);
+        
 
-        ProductList(res)
+
     }
-}
-
-impl Product { 
     pub fn get_product_info(
         product_id: &i32, 
         user_id_: i32,
-        conn: &PgConnection
+        ctx: &Context
     ) -> Result<(Product, Vec<PriceInfo>), DbError> { 
         use crate::schema::{products::*, self};
         use diesel::{RunQueryDsl, BelongingToDsl, QueryDsl, ExpressionMethods};
+        let conn: &PgConnection = &ctx.db_pool;
         
         let product: Product = schema::products::table
             .select(PRODUCT_COLUMNS)
@@ -77,7 +93,9 @@ impl Product {
 }
 
 impl NewProduct { 
-    pub fn create_product(&self, conn: &PgConnection) -> Result<Product, DbError> { 
+    pub fn create_product(&self, ctx: &Context) -> Result<Product, DbError> { 
+        let conn: &PgConnection = &ctx.db_pool;
+
         diesel::insert_into(products::table)
             .values(self)
             .on_conflict_do_nothing()

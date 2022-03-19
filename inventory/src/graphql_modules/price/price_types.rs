@@ -7,7 +7,8 @@ use juniper::{GraphQLInputObject, GraphQLObject};
 use serde::{Deserialize, Serialize};
 
 
-#[derive(Queryable, Debug, Clone, Identifiable, Serialize, Deserialize, PartialEq)]
+#[derive(Queryable, Debug, Clone, GraphQLObject,
+    Identifiable, Serialize, Deserialize, PartialEq)]
 #[table_name = "prices"]
 pub struct Price { 
     pub id: i32, 
