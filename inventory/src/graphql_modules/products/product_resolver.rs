@@ -155,7 +155,6 @@ impl Product  {
         new_product: NewProduct, 
         new_prices:  NewProductPriceToUpdate
     ) -> FieldResult<NewProductInfo> { 
-        use crate::schema::products::dsl::user_id;
 
         let conn = &ctx.db_pool.get()?;
         let new_product_info = NewProduct { 

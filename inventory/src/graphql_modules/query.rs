@@ -6,11 +6,15 @@ use super::price::{price_resolvers::*, price_types::*};
 use super::products::{product_resolver::*, product_types::*};
 
 pub struct QueryRoot;
-
-#[juniper::graphql_object(context = Context)]
+#[graphql_object(context = Context)]
 impl QueryRoot {
-    pub fn list_sale(ctx: &Context, search: Option<String>, limit: i32) -> FieldResult<FullSale> {  } 
-    pub fn show_sale(ctx: &Context, sale_id: i32) -> FieldResult<FullSale> {}
-    pub fn prices(ctx: &Context) -> FieldResult<ListedPrice> { Price::list_prices(ctx) }
+    //  Sales
+    pub fn list_sale(ctx: &Context, search: Option<NewSale>, limit: i32) -> FieldResult<FullSale> {  Sale::list_sale(ctx, search, limit)} 
+
+    //  Product
+    pub fn show_product(ctx: &Context, sale_id: i32) -> FieldResult<FullSale> { }
+
+    //  Prices
+    pub fn list_prices(ctx: &Context) -> FieldResult<ListedPrice> { Price::list_prices(ctx) }
     pub fn find_price(ctx: &Context, price_id: i32) -> FieldResult<Price> { Price::find_price(ctx, price_id)}
 }
