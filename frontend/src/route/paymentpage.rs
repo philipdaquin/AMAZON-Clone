@@ -16,10 +16,6 @@ use crate::{
     
 };
 
-
-
-
-
 #[function_component(PaymentPage)]
 pub fn paymentpage() -> Html {
     

@@ -22,7 +22,7 @@ pub enum AppRoute {
     #[at("/")] 
     Home,
 
-    #[at("/checkout")] 
+    #[at("/graphql")] 
     Checkout,
 
     #[at("/signin")] 
