@@ -1,11 +1,9 @@
-use crate::graphql_modules::{ QueryRoot};
 use juniper::{graphql_object, FieldResult, Object};
 use crate::graphql_modules::index::Context;
 use crate::graphql_modules::price::price_types::*;
 use crate::graphql_modules::sale::sale_types::{*};
 
 pub struct MutationRoot;
-
 #[graphql_object(context = Context)]
 impl MutationRoot {
     pub fn create_sale(ctx: &Context, new_sale: NewSale, new_products_sale: NewSaleProducts) -> FieldResult<FullSale> { Sale::create_sale(ctx, new_sale, new_products_sale)}

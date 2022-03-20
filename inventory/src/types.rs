@@ -1,3 +1,5 @@
+use diesel::sql_types;
+
 use crate::schema::prices;
 use crate::schema::prices_products;
 use crate::schema::products;
@@ -92,4 +94,13 @@ pub type SaleProducts = (
     sale_products::tax,
     sale_products::price,
     sale_products::total,
+);
+
+
+pub type SqlTypes = (
+    sql_types::Integer,
+    sql_types::Integer,
+    sql_types::Date,
+    sql_types::Float8,
+    sql_types::Nullable<sql_types::Text>,
 );

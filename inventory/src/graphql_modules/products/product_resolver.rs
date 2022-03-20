@@ -1,24 +1,34 @@
-use crate::graphql_modules::price::price_types::{Price, ProductPriceInfo, ProductPriceInfoUpdate, NewProductPriceToUpdate};
-use crate::schema::products::dsl::{*, user_id};
-use crate::schema::products;
-
 use crate::schema::prices;
 use crate::schema::prices::dsl::*;
+use crate::schema::products;
+use crate::schema::products::dsl::*;
 
+use super::product_types::*;
+use crate::graphql_modules::price::price_types::*;
+use crate::graphql_modules::index::Context;
 
 use diesel::pg::Pg;
-use diesel::{result::Error as DbError, PgConnection, RunQueryDsl, QueryDsl, BelongingToDsl};
-use diesel_full_text_search::plainto_tsquery;
-use crate::types::{PRODUCT_COLUMNS, PRICE_PRODUCT, PRICES};
-use crate::models::prices::PriceInfo;
-use super::product_types::{Product, NewProduct, NewProductInfo, ListedProduct};
+use diesel::{
+    result::Error as DbError, 
+    Connection, 
+    PgConnection, 
+    ExpressionMethods, 
+    RunQueryDsl, 
+    GroupedBy, 
+    QueryDsl,
+    BelongingToDsl, 
+    BoolExpressionMethods
+};
+
+use diesel_full_text_search::{plainto_tsquery, TsRumExtensions, TsVectorExtensions};
+use crate::types::*;
 use juniper::FieldResult;
-use crate::graphql_modules::index::Context;
+
 //  CRUD
 impl Product  { 
-    pub fn delete_product(ctx: &Context, product_id: i32 ) -> FieldResult<bool> { 
-
-        let conn: &PgConnection = &ctx.db_pool;
+    pub fn delete_product(ctx: &Context, product_id: i32) -> FieldResult<bool> { 
+        use crate::schema::products::dsl::user_id;
+        let conn = &ctx.db_pool.get()?;
         diesel::delete(
             products.filter(user_id.eq(ctx.user_id))
             .find(product_id))
@@ -31,10 +41,10 @@ impl Product  {
         curr_product: NewProduct, 
         new_prices: NewProductPriceToUpdate
     ) -> FieldResult<NewProductInfo> { 
-        let conn: &PgConnection = &ctx.db_pool;
-
+        use crate::schema::products::user_id;
+        let conn = &ctx.db_pool.get()?;
         //  Check if the product_id exists in the current database
-        let product_id = curr_product.id.ok_or(DbError::QueryBuilderError("MIssing product id".into()));
+        let product_id = curr_product.id.ok_or(DbError::QueryBuilderError("MIssing product id".into()))?;
         let new_product_info = NewProduct { 
             id: Some(product_id),
             ..curr_product
@@ -59,7 +69,9 @@ impl Product  {
         search_input: String, 
         limit: i32
     ) -> FieldResult<ListedProduct> { 
-        let conn: &PgConnection = &ctx.db_pool;
+        use crate::schema::products::dsl::user_id;
+
+        let conn = &ctx.db_pool.get()?;
         let mut query = products::table.into_boxed::<Pg>();
 
         if !search_input.is_empty() {
@@ -71,6 +83,7 @@ impl Product  {
         } else { 
             query = query.order(product_rank.desc());
         }
+
         let queried_products = query
             .select(PRODUCT_COLUMNS)
             .filter(user_id.eq(ctx.user_id).and(product_rank.le(rank)))
@@ -107,43 +120,44 @@ impl Product  {
             data: vec_products
         })
     }
-    pub fn get_product_info(
-        product_id: &i32, 
-        user_id_: i32,
-        ctx: &Context
-    ) -> FieldResult<NewProductInfo> { 
-        use crate::schema::{products::*, self};
-        use diesel::{RunQueryDsl, BelongingToDsl, QueryDsl, ExpressionMethods};
-        let conn: &PgConnection = &ctx.db_pool;
+    pub fn get_product_info(product_id: &i32, user_id_: i32, ctx: &Context) -> FieldResult<NewProductInfo> { 
+        use crate::schema::products::dsl::user_id;
+        use crate::schema::products::table;
+
+        let conn = &ctx.db_pool.get()?;
+
         //  Find the Product Selected
-        let product: Product = schema::products::table
+        let product: Product = products::table
             .select(PRODUCT_COLUMNS)
             .filter(user_id.eq(user_id_))
             .find(product_id)
             .first(conn)?;
+
         //  Find Records of products --> price info etc    
         let price_info: Vec<ProductPriceInfo> = PriceInfo::belonging_to(&product)
-        .inner_join(prices::table)
-        .load::<(PriceInfo, Price)>(conn)?
-        .iter()
-        .map(|product_info| ProductPriceInfo {
-            price_info: product_info.0,
-            price: product_info.1
-        }).collect();
+            .inner_join(prices::table)
+            .load::<(PriceInfo, Price)>(conn)?
+            .iter()
+            .map(|product_info| ProductPriceInfo {
+                price_info: product_info.0,
+                price: product_info.1
+            }).collect();
 
         let return_product = NewProductInfo {
             product,
             price_info,
         };
+        
         Ok(return_product)
     }
     pub fn create_product(
         ctx: &Context, 
         new_product: NewProduct, 
         new_prices:  NewProductPriceToUpdate
-    ) -> FieldResult<ListedProduct> { 
-        let conn: &PgConnection = &ctx.db_pool;
+    ) -> FieldResult<NewProductInfo> { 
+        use crate::schema::products::dsl::user_id;
 
+        let conn = &ctx.db_pool.get()?;
         let new_product_info = NewProduct { 
             user_id: Some(ctx.user_id),
             ..new_product
@@ -172,7 +186,7 @@ impl PartialEq<Product> for NewProduct {
 
         new_product.title == Some(product.title) &&
         new_product.stock == Some(product.stock) &&
-        new_product.cost == product.price &&
+        new_product.cost == product.cost &&
         new_product.description == product.description
         
     }

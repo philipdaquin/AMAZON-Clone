@@ -7,6 +7,4 @@ pub mod mutation;
 pub mod query;
 
 
-#[derive(Clone, Debug)]
-pub struct QueryRoot;
 

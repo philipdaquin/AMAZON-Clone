@@ -10,7 +10,7 @@ actix-web = "3.3.3"
 actix-web-lab = "0.12.0"
 actix-cors = "0.5.4"
 async-stripe = { version = "0.13", default-features = false, features = ["runtime-async-std-surf"] }
-diesel = { version = "1.4.8", features = ["postgres", "uuid", "r2d2", "chrono", "numeric"] }
+diesel = { version = "1.0.0", features = ["postgres", "uuid", "r2d2", "chrono", "numeric"] }
 bigdecimal = "0.0.14"
 dotenv = "0.15.0"
 juniper = "0.15.9"

@@ -4,11 +4,16 @@ use diesel::{Insertable, AsChangeset};
 use juniper::{GraphQLObject, GraphQLInputObject};
 use serde::Deserialize;
 use crate::schema::sales;
-use crate::models::product::{Product, NewProduct};
 use crate::schema::sale_products;
 use super::sale_resolver::*;
+use crate::graphql_modules::price::price_types::*;
+use crate::graphql_modules::products::product_types::*;
 
-#[derive(Identifiable, Associations, Queryable, Debug, Clone, PartialEq)]
+
+
+#[derive(Identifiable, Associations, Queryable, Debug, Clone, PartialEq, 
+    GraphQLObject  
+)]
 #[table_name = "sale_products"]
 #[belongs_to(Sale)]
 #[belongs_to(Product)]
@@ -22,11 +27,14 @@ pub struct ProductSaleInfo {
     pub price: i32,
     pub total: i32
 }
+#[derive(Clone, GraphQLObject, Debug)]
 pub struct ProductForSale  {
     pub sale_info: ProductSaleInfo,
     pub product: Product
 }
-#[derive(Insertable, Deserialize, Serialize, AsChangeset, Debug, Clone, PartialEq)]
+#[derive(Insertable, Deserialize, Serialize, AsChangeset, Debug, Clone, PartialEq,
+    GraphQLInputObject
+)]
 #[table_name = "sale_products"]
 pub struct NewProductSale { 
     pub id: Option<i32>,
@@ -38,12 +46,12 @@ pub struct NewProductSale {
     pub price: Option<i32>,
     pub total: Option<f64>,
 }
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, GraphQLInputObject)]
 pub struct NewProductSaleInfo  {
     pub sale_info: NewProductSale,
     pub product: NewProduct
 }
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, GraphQLInputObject)]
 pub struct NewSaleProducts { 
     pub data: Vec<NewProductSaleInfo>
 }
@@ -75,10 +83,10 @@ pub struct FullSale {
     pub sale_info: Sale,
     pub sales_products: Vec<ProductForSale>
 }
-#[derive(Debug, Clone, GraphQLObject)]
+#[derive(Debug, Clone)]
 pub struct FullNewSale { 
     pub sale: NewSale,
-    pub sales_products: Vec<NewProductSale>
+    pub sales_products: Vec<NewProductSaleInfo>
 }
 #[derive(Debug, Clone, GraphQLObject)]
 pub struct ListSale { 

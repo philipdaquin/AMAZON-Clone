@@ -11,12 +11,11 @@ extern crate authentication;
 extern crate juniper;
 extern crate chrono;
 
-
 pub mod server;
 pub mod db;
 pub mod models;
 pub mod schema;
-pub mod handlers;
+// pub mod handlers;
 pub mod types;
 pub mod graphql_modules;
 pub mod error;

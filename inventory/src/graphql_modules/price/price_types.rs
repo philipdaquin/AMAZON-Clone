@@ -1,11 +1,10 @@
 use crate::schema::{prices, prices_products};
-use diesel::{RunQueryDsl, QueryDsl, ExpressionMethods, Connection, PgConnection};
+use diesel::{RunQueryDsl, QueryDsl, ExpressionMethods, Connection, PgConnection, Associations};
 use diesel::{result::Error as DbError};
 use itertools::Itertools;
-use crate::models::product::Product;
 use juniper::{GraphQLInputObject, GraphQLObject};
 use serde::{Deserialize, Serialize};
-
+use crate::graphql_modules::products::product_types::*;
 
 #[derive(Queryable, Debug, Clone, GraphQLObject,
     Identifiable, Serialize, Deserialize, PartialEq)]
@@ -63,5 +62,5 @@ pub struct ProductPriceInfoUpdate {
 }
 #[derive(Debug, Clone, GraphQLInputObject)]
 pub struct NewProductPriceToUpdate { 
-    pub data: ProductPriceInfoUpdate
+    pub data: Vec<ProductPriceInfoUpdate>
 }

@@ -1,33 +1,32 @@
-use diesel::pg::Pg;
-use diesel::{result::Error as DbError, 
-    PgConnection, BelongingToDsl, sql_types,
-};
-use diesel::{RunQueryDsl, QueryDsl, ExpressionMethods};
-use juniper::meta::Field;
-use crate::schema::sales::sale_date;
-use crate::schema::{self, sales, sale_products};
-use crate::types::{ProductColumns, PRODUCT_COLUMNS, SALEPRODUCTS, SALESCOLUMN};
-use juniper::{FieldResult, GraphQLObject, GraphQLInputObject, graphql_object};
-use chrono::NaiveDate;
-use crate::models::product_sales::{NewProductSaleInfo, ProductForSale, ProductSaleInfo};
-use std::sync::Arc;
-use crate::graphql_modules::index::Context;
-use crate::error::ServerError;
-use super::sale_types::{NewProductSale, *, NewSaleProducts};
+// use crate::schema::prices;
+// use crate::schema::prices::dsl::*;
+// use crate::schema::products;
+// use crate::schema::products::dsl::*;
+use crate::schema::sales::dsl::*;
+use crate::schema::sales;
+
 use crate::graphql_modules::products::product_types::*;
+use crate::graphql_modules::price::price_types::*;
+use crate::graphql_modules::index::Context;
 
+use diesel::pg::Pg;
+use diesel::{
+    result::Error as DbError, 
+    Connection, 
+    PgConnection, 
+    ExpressionMethods, 
+    RunQueryDsl, 
+    GroupedBy, 
+    QueryDsl,
+    BelongingToDsl, 
+    BoolExpressionMethods
+};
 
-type BoxedQuery<'a> = diesel::query_builder::BoxedSelectStatement<'a, 
-        (
-            sql_types::Integer,
-            sql_types::Integer,
-            sql_types::Date,
-            sql_types::Float8,
-            sql_types::Nullable<sql_types::Text>,
-        ),
-        schema::sales::table, diesel::pg::Pg
-    >;
+use diesel_full_text_search::{plainto_tsquery, TsRumExtensions, TsVectorExtensions};
+use crate::types::*;
+use juniper::FieldResult;
 
+type BoxedQuery<'a> = BoxedSelectStatement<'a, SqlTypes, schema::sales::table, Pg>;
 impl Sale { 
     pub fn search_records<'a>(search: Option<NewSale>) -> BoxedQuery<'a> {
         let mut query = sales::table.into_boxed::<Pg>();
@@ -42,13 +41,8 @@ impl Sale {
         query
     }
 
-    pub fn delete_sale(
-        ctx: &Context, 
-        sale_id: i32
-    ) -> FieldResult<bool> {
-        use crate::schema::sales::{dsl::{user_id, sales}};
-
-        let conn: &PgConnection = ctx.db_pool;
+    pub fn delete_sale(ctx: &Context, sale_id: i32) -> FieldResult<bool> {
+        let conn = &ctx.db_pool.get()?;
         let delete = diesel::delete(sales.filter(user_id.eq(ctx.user_id)).find(sale_id)
         ).execute(conn)?;
         Ok(delete == 1)
@@ -58,19 +52,14 @@ impl Sale {
         update_sale: NewSale,
         update_products_sale: NewSaleProducts
     ) -> FieldResult<FullSale> {
-        use crate::schema::sales::dsl::{user_id};
-        use crate::schema::sales::dsl::sales;
-        
-        let conn: &PgConnection = ctx.db_pool; 
-
+        let conn = &ctx.db_pool.get()?;
         //  Only update if it has been created before 
         //  Find sale_id exists 
-        let sale_id = update_sale.id
-            .ok_or(ServerError::DatabaseRequestError("Sale Info is not found"))?;
+        let sale_id = update_sale.id.ok_or(DbError::QueryBuilderError("Missing Id".into()))?;
 
         conn.transaction(|| { 
             let sale = diesel::update(sales)
-                .filter(user_id.eq(ctx.user_id).find(sale_id))
+            .filter(user_id.eq(ctx.user_id).find(sale_id))
                 .set_form(&update_sale)
                 .get_result::<Sale>(conn)?;
             
@@ -96,13 +85,16 @@ impl Sale {
                         Err(ServerError::InternalServerError)
                     }
                 }).collect();
-        })
 
+            Ok(FullSale { 
+                sale_info: sale,
+                sales_products: updated_products,
+            })
+        })
     }
     pub fn list_sale(ctx: &Context, search: Option<NewSale>, limit: i32) -> FieldResult<ListSale> { 
-        use crate::schema::sales;
         
-        let conn: &PgConnection = &ctx.conn;
+        let conn = &ctx.db_pool.get()?;
         let query = Sale::search_records(search);
 
         let query_sale: Vec<Sale> = query
@@ -145,9 +137,8 @@ impl Sale {
         new_sale: NewSale,
         new_products_sale: NewSaleProducts
     )  -> FieldResult<FullSale> {
-        use crate::schema::sales::{table};
-        use crate::schema::sale_products;
-        let conn: &PgConnection = ctx.db_pool;
+        
+        let conn = &ctx.db_pool.get()?;
         let new_sale = NewSale { 
             user_id: Some(ctx.user_id),
             ..new_sale
@@ -196,9 +187,8 @@ impl Sale {
         })
     }
     pub fn show_product(ctx: &Context, sale_id: i32) -> FieldResult<FullSale> { 
-        use crate::schema::sales::{table, user_id};
 
-        let conn: &PgConnection = ctx.db_pool;
+        let conn = &ctx.db_pool.get()?;
         let sale: Sale = table 
             .filter(user_id.eq(ctx.user_id))
             .find(sale_id)

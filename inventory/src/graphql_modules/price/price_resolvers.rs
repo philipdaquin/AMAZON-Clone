@@ -1,15 +1,30 @@
-use diesel::{RunQueryDsl, QueryDsl, ExpressionMethods, Connection, PgConnection};
-use diesel::{result::Error as DbError};
-use itertools::Itertools;
-use juniper::FieldResult;
+use crate::schema::prices;
+use crate::schema::prices::dsl::*;
+use crate::schema::prices_products;
+
+// use crate::schema::prices::dsl::*;
+// use crate::schema::products;
+// use crate::schema::products::dsl::*;
+
+use crate::graphql_modules::products::product_types::*;
+use crate::graphql_modules::price::price_types::*;
 use crate::graphql_modules::index::Context;
-use crate::types::PRICE_PRODUCT;
-use crate::types::PRICES;
-use super::price_types::{
-    Price, ListedPrice, ProductPriceInfo, NewPriceForm,
-    PriceInfo, FormPriceInfo, ProductPriceInfoUpdate, 
-    NewProductPriceToUpdate
+use diesel::pg::Pg;
+use diesel::{
+    result::Error as DbError, 
+    Connection, 
+    PgConnection, 
+    ExpressionMethods, 
+    RunQueryDsl, 
+    GroupedBy, 
+    QueryDsl,
+    BelongingToDsl, 
+    BoolExpressionMethods
 };
+use itertools::Itertools;
+use crate::types::*;
+use juniper::FieldResult;
+
 
 //  The purpose is to associate users to the products they have, they should not have access to another users
 //   list of products. WE are also associating prices to the product (another child to parent relationship) 
@@ -19,19 +34,21 @@ impl ProductPriceInfoUpdate {
         records: NewProductPriceToUpdate, 
         product_id: i32,
         ctx: &Context
-    ) -> Result<Vec<PriceInfo>, DbError> { 
+    ) -> Result<Vec<ProductPriceInfo>, DbError> { 
         use crate::schema::prices_products;
+        use crate::schema::prices::{ user_id };
+        use crate::schema::prices;
 
-        let conn: &PgConnection = &ctx.db_pool; 
+        let conn = &ctx.db_pool.get().expect("Pool Connection Failed");
         conn.transaction(|| { 
             let mut to_keep = Vec::new();
             for info in records.data { 
                 
-                if info.delete && info.price_info.id.is_some() { 
+                if info.to_delete && info.updated_price_info.id.is_some() { 
 
                     diesel::delete(prices_products::table
                         .filter(prices_products::user_id.eq(ctx.user_id))
-                        .find(info.price_info.id.unwrap())
+                        .find(info.updated_price_info.id.unwrap())
                     ).execute(conn)?;
                 } else { 
                     to_keep.push(info)
@@ -42,7 +59,7 @@ impl ProductPriceInfoUpdate {
                 let new_price_info = FormPriceInfo { 
                     user_id: Some(ctx.user_id),
                     product_id: Some(product_id),
-                    ..price_product_info.clone().price_info
+                    ..price_product_info.clone().updated_price_info
                 };
 
                 diesel::insert_into(prices_products::table)
@@ -51,7 +68,8 @@ impl ProductPriceInfoUpdate {
                     .do_update()
                     .set(prices_products::amount.eq(new_price_info.amount))
                     .returning(PRICE_PRODUCT).get_result::<PriceInfo>(conn)
-            }).fold_ok(vec![], 
+            })
+            .fold_ok(vec![], 
                 |mut acc, val| { 
                 acc.push(val);
                 acc
@@ -59,15 +77,17 @@ impl ProductPriceInfoUpdate {
 
             let mut full_price_info = Vec::new();
 
-            price_product_info.iter().for_each(|info| { 
-                let prices = Price::find_price(&ctx, info.price_id)
-                    .map_err(|_| DbError::NotFound);
+
+
+            for info in price_product_info { 
+                let price_struct = Price::find_price(&ctx, info.price_id)
+                .map_err(|_| DbError::NotFound)?;
+                
                 full_price_info.push(ProductPriceInfo { 
                     price_info: info,
-                    price: prices 
+                    price: price_struct 
                 })
-            });
-
+            }
             Ok(full_price_info)
 
         })
@@ -75,11 +95,11 @@ impl ProductPriceInfoUpdate {
 }
 //  Resolvers is a collection of functions that generate response for a GraphQL query. 
 //  It acts as a GraphQL Query Handler 
-use crate::schema::prices::dsl::{*};
-use crate::schema::prices::table;
 impl Price { 
     pub fn list_prices(ctx: &Context) -> FieldResult<ListedPrice> {
-        let conn: &PgConnection = &ctx.db_pool;
+        use crate::schema::prices::dsl::{user_id, prices};
+
+        let conn = &ctx.db_pool.get()?;
         let listed_price = ListedPrice { 
             //  Load the prices for the current user in context
             data:  prices.filter(user_id.eq(ctx.user_id))
@@ -88,7 +108,9 @@ impl Price {
         Ok(listed_price)
     }
     pub fn find_price(ctx: &Context, price_id: i32) -> FieldResult<Price> {
-        let conn: &PgConnection = &ctx.db_pool;
+        use crate::schema::prices::dsl::{user_id, prices};
+
+        let conn = &ctx.db_pool.get()?;
         let price = prices
             .filter(user_id.eq(ctx.user_id))
             .find(price_id)
@@ -98,12 +120,12 @@ impl Price {
 
 
     pub fn create_price(ctx: &Context, new_price: NewPriceForm) -> FieldResult<Price> {
-        let conn: &PgConnection = &ctx.db_pool;
+        let conn = &ctx.db_pool.get()?;
         let new_price = NewPriceForm { 
             user_id: Some(ctx.user_id),
             ..new_price
         };
-        let price = diesel::insert_into(table)
+        let price = diesel::insert_into(prices::table)
             .values(new_price)
             .returning(PRICES)
             .on_conflict_do_nothing()
@@ -111,25 +133,31 @@ impl Price {
         Ok(price)
     }
     pub fn update_price(ctx: &Context, price: NewPriceForm) -> FieldResult<Price> {
-        let conn: &PgConnection = &ctx.db_pool;
+        
+        let conn = &ctx.db_pool.get()?;
         //  Check if the price_id exists in the database 
-        let price_id = price.id.ok_or(DbError::QueryBuilderError("Missing Price Id".into()));
+        let price_id = price
+            .id
+            .ok_or(DbError::QueryBuilderError("Missing Price Id".into()))?;
         let new_price = NewPriceForm {
             user_id: Some(ctx.user_id),
-            ..price
+            ..price.clone()
         };
         let updated_price = diesel::update(prices
             //  Filter table owned by user
             //  Find the row associated to the Primary_Key
-            .filter(user_id.eq(ctx.user_id))
-            .find(price_id).set(new_price))
+            //  filter(user_id == user_id).find(id)
+            .filter(user_id.eq(ctx.user_id)).find(price_id))
+            .set(new_price)
             //  Update Value
             .get_result::<Price>(conn)?;
         Ok(updated_price)
 
     }
     pub fn destroy_price(ctx: &Context, price_id: i32) -> FieldResult<bool> {
-        let conn: &PgConnection = &ctx.db_pool;
+        use crate::schema::prices::dsl::{user_id, prices};
+
+        let conn = &ctx.db_pool.get()?;
         diesel::delete(prices.filter(user_id.eq(ctx.user_id))
             .find(price_id))
             .execute(conn)?;
