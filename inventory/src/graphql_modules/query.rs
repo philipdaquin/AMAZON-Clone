@@ -8,6 +8,10 @@ use super::products::{product_resolver::*, product_types::*};
 pub struct QueryRoot;
 #[graphql_object(context = Context)]
 impl QueryRoot {
+    
+    pub fn test(context: &Context) -> FieldResult<String> {
+        Ok("test123123123123".to_string())
+    }
     //  Sales
     pub fn list_sale(ctx: &Context, search: Option<NewSale>, limit: i32) -> FieldResult<ListSale> {  Sale::list_sale(ctx, search, limit)} 
 
