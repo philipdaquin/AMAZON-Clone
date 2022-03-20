@@ -9,10 +9,11 @@ pub struct QueryRoot;
 #[graphql_object(context = Context)]
 impl QueryRoot {
     //  Sales
-    pub fn list_sale(ctx: &Context, search: Option<NewSale>, limit: i32) -> FieldResult<FullSale> {  Sale::list_sale(ctx, search, limit)} 
+    pub fn list_sale(ctx: &Context, search: Option<NewSale>, limit: i32) -> FieldResult<ListSale> {  Sale::list_sale(ctx, search, limit)} 
 
     //  Product
-    pub fn show_product(ctx: &Context, sale_id: i32) -> FieldResult<FullSale> { }
+    pub fn list_products(ctx: &Context, rank: f64, search_input: String, limit: i32) -> FieldResult<ListedProduct> { Product::list_products(ctx, rank, search_input, limit)}
+    pub fn get_product_info(product_id: i32, user_id_: i32, ctx: &Context) -> FieldResult<NewProductInfo> { Product::get_product_info(&product_id, user_id_, ctx)}
 
     //  Prices
     pub fn list_prices(ctx: &Context) -> FieldResult<ListedPrice> { Price::list_prices(ctx) }
