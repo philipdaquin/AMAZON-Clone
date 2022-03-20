@@ -75,28 +75,26 @@ pub type SalesColumn = (
 );
 
 pub const SALEPRODUCTS: SaleProducts = (
-    sale_products::id,
-    sale_products::product_id,
-    sale_products::sale_id,
-    sale_products::amount,
-    sale_products::discount,
-    sale_products::tax,
-    sale_products::price,
-    sale_products::total,
+    sale_products::dsl::id,
+    sale_products::dsl::product_id,
+    sale_products::dsl::sale_id,
+    sale_products::dsl::amount,
+    sale_products::dsl::discount,
+    sale_products::dsl::tax,
+    sale_products::dsl::price,
+    sale_products::dsl::total,
 );
 
 pub type SaleProducts = (
-    sale_products::id,
-    sale_products::product_id,
-    sale_products::sale_id,
-    sale_products::amount,
-    sale_products::discount,
-    sale_products::tax,
-    sale_products::price,
-    sale_products::total,
+    sale_products::dsl::id,
+    sale_products::dsl::product_id,
+    sale_products::dsl::sale_id,
+    sale_products::dsl::amount,
+    sale_products::dsl::discount,
+    sale_products::dsl::tax,
+    sale_products::dsl::price,
+    sale_products::dsl::total,
 );
-
-
 pub type SqlTypes = (
     sql_types::Integer,
     sql_types::Integer,

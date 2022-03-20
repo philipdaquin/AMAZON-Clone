@@ -35,9 +35,6 @@ impl ProductPriceInfoUpdate {
         product_id: i32,
         ctx: &Context
     ) -> Result<Vec<ProductPriceInfo>, DbError> { 
-        use crate::schema::prices_products;
-        use crate::schema::prices::{ user_id };
-        use crate::schema::prices;
 
         let conn = &ctx.db_pool.get().expect("Pool Connection Failed");
         conn.transaction(|| { 
@@ -97,8 +94,6 @@ impl ProductPriceInfoUpdate {
 //  It acts as a GraphQL Query Handler 
 impl Price { 
     pub fn list_prices(ctx: &Context) -> FieldResult<ListedPrice> {
-        use crate::schema::prices::dsl::{user_id, prices};
-
         let conn = &ctx.db_pool.get()?;
         let listed_price = ListedPrice { 
             //  Load the prices for the current user in context
@@ -108,7 +103,6 @@ impl Price {
         Ok(listed_price)
     }
     pub fn find_price(ctx: &Context, price_id: i32) -> FieldResult<Price> {
-        use crate::schema::prices::dsl::{user_id, prices};
 
         let conn = &ctx.db_pool.get()?;
         let price = prices
@@ -133,7 +127,6 @@ impl Price {
         Ok(price)
     }
     pub fn update_price(ctx: &Context, price: NewPriceForm) -> FieldResult<Price> {
-        
         let conn = &ctx.db_pool.get()?;
         //  Check if the price_id exists in the database 
         let price_id = price
@@ -155,10 +148,9 @@ impl Price {
 
     }
     pub fn destroy_price(ctx: &Context, price_id: i32) -> FieldResult<bool> {
-        use crate::schema::prices::dsl::{user_id, prices};
-
         let conn = &ctx.db_pool.get()?;
-        diesel::delete(prices.filter(user_id.eq(ctx.user_id))
+        diesel::delete(prices
+            .filter(user_id.eq(ctx.user_id))
             .find(price_id))
             .execute(conn)?;
         Ok(true)

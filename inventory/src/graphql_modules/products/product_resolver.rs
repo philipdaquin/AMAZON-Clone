@@ -87,7 +87,7 @@ impl Product  {
         let queried_products = query
             .select(PRODUCT_COLUMNS)
             .filter(user_id.eq(ctx.user_id).and(product_rank.le(rank)))
-            .limit(limit.into())
+            .limit(i64::from(limit))
             .load::<Product>(conn)?;
         
         let price_info = PriceInfo::belonging_to(&queried_products) 
