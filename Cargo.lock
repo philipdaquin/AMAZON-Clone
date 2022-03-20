@@ -2628,6 +2628,7 @@ dependencies = [
  "elasticsearch",
  "env_logger",
  "failure",
+ "futures-util",
  "itertools",
  "juniper",
  "log",

@@ -42,17 +42,12 @@ pub async fn graphql(
     data_body: web::Json<GraphQLRequest>,
     db_pool: web::Data<DbPool>,
 ) -> Result<HttpResponse, Error> {
-    let user = web::block(move || { 
+    
         let pool = (*db_pool).clone();
-            
-        let ctx = create_context(logged_user.id, pool);
-        let res = data_body.execute(&st, &ctx);
-        Ok::<_, serde_json::error::Error>(serde_json::to_string(&res)?)
-    })
-    .await?;
+        let ctx = create_context(3, (*pool).to_owned());
+        let res = data_body.execute(&st, &ctx).await;
 
     Ok(HttpResponse::Ok()
-        .content_type("application/json")
-        .body(user))
+        .json(res))
 
 }

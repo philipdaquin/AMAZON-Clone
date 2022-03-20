@@ -32,7 +32,7 @@ r2d2 = "0.8.9"
 derive_more = "0.99.17"
 uuid = "0.8.2"
 actix-threadpool = "0.3.3"
-
+futures-util = "0.3.5"
 
 
 # async-graphql = "3.0.34"

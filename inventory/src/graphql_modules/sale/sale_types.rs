@@ -11,7 +11,7 @@ use crate::graphql_modules::products::product_types::*;
 
 
 
-#[derive(Identifiable, Associations, 
+#[derive(Identifiable, Associations, Serialize,
     Queryable, Debug, Clone, PartialEq, GraphQLObject )]
 #[table_name = "sale_products"]
 #[belongs_to(Sale)]
@@ -56,7 +56,7 @@ pub struct NewSaleProducts {
 
 
 /// Sales 
-#[derive(Identifiable, Queryable, Debug, Clone, PartialEq, GraphQLObject)]
+#[derive(Identifiable, Queryable, Debug,  Clone, PartialEq, GraphQLObject)]
 #[table_name = "sales"]
 #[graphql(description = "Sales Object")]
 pub struct Sale { 

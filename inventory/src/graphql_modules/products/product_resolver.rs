@@ -76,9 +76,9 @@ impl Product  {
 
         if !search_input.is_empty() {
             query = query
-                .filter(text_searchable_product_col.matches(plainto_tsquery(search_input)))
+                .filter(text_searchable_product_col.matches(plainto_tsquery(search_input.clone())))
                 .order((product_rank.desc(), 
-                text_searchable_product_col.distance(plainto_tsquery(search_input))
+                text_searchable_product_col.distance(plainto_tsquery(search_input.clone()))
             ));
         } else { 
             query = query.order(product_rank.desc());
@@ -139,8 +139,8 @@ impl Product  {
             .load::<(PriceInfo, Price)>(conn)?
             .iter()
             .map(|product_info| ProductPriceInfo {
-                price_info: product_info.0,
-                price: product_info.1
+                price_info: product_info.0.clone(),
+                price: product_info.1.clone()
             }).collect();
 
         let return_product = NewProductInfo {
