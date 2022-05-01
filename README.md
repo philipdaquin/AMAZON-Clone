@@ -1,9 +1,4 @@
 # Amazon-Clone [WIP]
-Left To Do: 
--  FIX Fetch Request on (Frontend)
--  TEST Stripe Payment Service + User Order History 
--  Deploy to AWS and Use Terraform 
--  Elastic Search
 ## High-Level Design: Main Components
 - Inventory
 - Delivery/Notification Service
