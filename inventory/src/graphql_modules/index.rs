@@ -1,5 +1,5 @@
 use std::sync::Arc;
-use crate::authentication::logged_user::LoggedUser;
+// use crate::authentication::logged_user::LoggedUser;
 use actix_web::{web, Error, HttpRequest, HttpResponse};
 use juniper::http::{playground::playground_source, GraphQLRequest};
 use serde::de::Error as SerdeError;
@@ -38,7 +38,7 @@ pub async fn playground() -> HttpResponse {
 pub async fn graphql(
     req: HttpRequest,
     st: web::Data<Arc<SchemaGraphQL>>,
-    logged_user: LoggedUser,
+    // logged_user: LoggedUser,
     data_body: web::Json<GraphQLRequest>,
     db_pool: web::Data<DbPool>,
 ) -> Result<HttpResponse, Error> {

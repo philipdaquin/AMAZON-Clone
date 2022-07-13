@@ -9,9 +9,10 @@ pub fn homepage() -> Html {
         <>
             <div class="home">
                 <div class="home__container">
-                    <img class="home__image" src="https://images-eu.ssl-images-amazon.com/images/G/02/digital/video/merch2016/Hero/Covid19/Generic/GWBleedingHero_ENG_COVIDUPDATE__XSite_1500x600_PV_en-GB._CB428684220_.jpg" alt=""/>
+                    <img class="home__image" src="https://mspoweruser.com/wp-content/uploads/2020/06/amazon-prime-video-1.jpg" alt=""/>
                 </div>
                 //  Product Pages
+            <div class = "home__products">
                 <div class="home__row">
                     <Product 
                         id={1}
@@ -60,7 +61,9 @@ pub fn homepage() -> Html {
                         image="https://images-na.ssl-images-amazon.com/images/I/6125mFrzr6L._AC_SX355_.jpg"
                     />
                 </div>
+                </div>
             </div>
+
         </>
     }
 }

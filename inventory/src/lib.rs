@@ -6,7 +6,7 @@ extern crate serde;
 #[macro_use]
 extern crate diesel_full_text_search;
 
-extern crate authentication;
+// extern crate authentication;
 // extern crate async_graphql;
 extern crate juniper;
 extern crate chrono;
